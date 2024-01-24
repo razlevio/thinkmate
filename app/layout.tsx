@@ -3,7 +3,6 @@ import { Metadata } from "next"
 import { appConfig } from "@/config/app"
 import { geist, geistMono } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
-import { ModalProvider } from "@/components/providers/modal-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider"
 import { Toaster } from "sonner";
 import { Analytics } from "@vercel/analytics/react"
@@ -56,7 +55,6 @@ export default function RootLayout({
         <body>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             <Toaster position="bottom-center" />
-            <ModalProvider />
             {children}
             <Analytics />
             <SpeedInsights />
