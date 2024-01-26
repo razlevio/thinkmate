@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import {
 	Apple,
 	Backpack,
@@ -94,6 +95,7 @@ const routes: SidebarItemProps[] = [
 ]
 
 export function Sidebar() {
+	const pathname = usePathname()
 	return (
 			<div className="flex h-full flex-col space-y-4 py-4">
 				<div className="flex-1 px-3 py-2">
@@ -106,8 +108,9 @@ export function Sidebar() {
               <Link
                 href={route.href}
                 key={route.href}
-                className="group flex w-full cursor-pointer justify-start rounded-lg p-3 text-sm font-medium transition hover:bg-muted"
-              >
+                className={cn("group flex w-full cursor-pointer justify-start rounded-lg p-3 text-sm font-medium transition hover:bg-muted",
+									route.href === pathname ? "bg-muted" : "hover:bg-muted",
+								)}>
                 <div className="flex flex-1 items-center">
                   <route.icon className={cn("mr-3", route.color)} />
                   {route.label}
