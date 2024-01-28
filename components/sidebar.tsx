@@ -12,7 +12,6 @@ import {
 	GaugeCircle,
 	Lightbulb,
 	LucideIcon,
-	Menu,
 	PartyPopper,
 	Settings,
 	Shrub,

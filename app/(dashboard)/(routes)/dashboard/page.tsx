@@ -94,8 +94,8 @@ export default function DashboardPage() {
   return (
     <div>
       <div className="mb-8 space-y-4">
-        <h2 className="md:texl-4xl font bold text-center text-2xl">Explore the power of AI to enhance day-to-day life</h2>
-        <p className="text-center text-sm font-light text-muted-foreground md:text-lg">Chat with a collection of sophisticated AI agents designed to enhance peoples day-to-day lives and relationships by promoting exciting, creative ideas in various aspects of life</p>
+        <h2 className="md:texl-4xl text-center text-2xl font-bold">Navigate Your World with AI</h2>
+        <p className="text-center text-sm font-light text-muted-foreground md:text-lg">Discover New Visions, Experiences, and Journeys with the help of cutting-edge AI assistants</p>
       </div>
       <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 md:px-10 lg:grid-cols-3 xl:px-24">
         {tools.map((tool) => (
