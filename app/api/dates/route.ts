@@ -1,35 +1,36 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@clerk/nextjs"
-import { experimental_AssistantResponse } from "ai";
-import { MessageContentText } from "openai/resources/beta/threads/messages/messages";
-import OpenAI from "openai";
+import { experimental_AssistantResponse } from "ai"
+import OpenAI from "openai"
+import { MessageContentText } from "openai/resources/beta/threads/messages/messages"
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+	apiKey: process.env.OPENAI_API_KEY,
 })
 
 // IMPORTANT! Set the runtime to edge
-export const runtime = "edge";
+export const runtime = "edge"
 
 export async function POST(req: NextRequest) {
-  try {
-    const { userId } = auth()
+	try {
+		const { userId } = auth()
 		const input: {
-			threadId: string | null;
-			message: string;
-		} = await req.json();
+			threadId: string | null
+			message: string
+		} = await req.json()
 
-		if(!userId) return new NextResponse("Unauthorized", { status: 401 })
-    if(!openai.apiKey) return new NextResponse("OpenAI API Key not configured", { status: 500 })
+		if (!userId) return new NextResponse("Unauthorized", { status: 401 })
+		if (!openai.apiKey)
+			return new NextResponse("OpenAI API Key not configured", { status: 500 })
 
 		// Create a thread if needed
-		const threadId = input.threadId ?? (await openai.beta.threads.create({})).id;
+		const threadId = input.threadId ?? (await openai.beta.threads.create({})).id
 
 		// Add a message to the thread
 		const createdMessage = await openai.beta.threads.messages.create(threadId, {
 			role: "user",
 			content: input.message,
-		});
+		})
 
 		return experimental_AssistantResponse(
 			{ threadId, messageId: createdMessage.id },
@@ -37,19 +38,19 @@ export async function POST(req: NextRequest) {
 				// Run the assistant on the thread
 				const run = await openai.beta.threads.runs.create(threadId, {
 					assistant_id:
-						process.env.VISION_ASSISTANT_ID ??
+						process.env.DATES_ASSISTANT_ID ??
 						(() => {
-							throw new Error("VISION_ASSISTANT_ID is not set");
+							throw new Error("DATES_ASSISTANT_ID is not set")
 						})(),
-				});
+				})
 
 				async function waitForRun(run: OpenAI.Beta.Threads.Runs.Run) {
 					// Poll for status change
 					while (run.status === "queued" || run.status === "in_progress") {
 						// delay for 500ms:
-						await new Promise((resolve) => setTimeout(resolve, 500));
+						await new Promise((resolve) => setTimeout(resolve, 500))
 
-						run = await openai.beta.threads.runs.retrieve(threadId!, run.id);
+						run = await openai.beta.threads.runs.retrieve(threadId!, run.id)
 					}
 
 					// Check the run status
@@ -59,11 +60,11 @@ export async function POST(req: NextRequest) {
 						run.status === "failed" ||
 						run.status === "expired"
 					) {
-						throw new Error(run.status);
+						throw new Error(run.status)
 					}
 				}
 
-				await waitForRun(run);
+				await waitForRun(run)
 
 				// Get new thread messages (after our message)
 				const responseMessages = (
@@ -71,7 +72,7 @@ export async function POST(req: NextRequest) {
 						after: createdMessage.id,
 						order: "asc",
 					})
-				).data;
+				).data
 
 				// Send the messages
 				for (const message of responseMessages) {
@@ -81,13 +82,12 @@ export async function POST(req: NextRequest) {
 						content: message.content.filter(
 							(content) => content.type === "text"
 						) as Array<MessageContentText>,
-					});
+					})
 				}
 			}
-		);
-
-  } catch(error) {
-    console.log("[VISION_ERROR]", error)
-    return new NextResponse("Internal error", { status: 500})
-  }
+		)
+	} catch (error) {
+		console.log("[DATES_ERROR]", error)
+		return new NextResponse("Internal error", { status: 500 })
+	}
 }

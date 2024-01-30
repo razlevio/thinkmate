@@ -37,9 +37,9 @@ export async function POST(req: NextRequest) {
 				// Run the assistant on the thread
 				const run = await openai.beta.threads.runs.create(threadId, {
 					assistant_id:
-						process.env.VISION_ASSISTANT_ID ??
+						process.env.PHILOSOPHY_ASSISTANT_ID ??
 						(() => {
-							throw new Error("VISION_ASSISTANT_ID is not set");
+							throw new Error("PHILOSOPHY_ASSISTANT_ID is not set");
 						})(),
 				});
 
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
 		);
 
   } catch(error) {
-    console.log("[VISION_ERROR]", error)
+    console.log("[PHILOSOPHY_ERROR]", error)
     return new NextResponse("Internal error", { status: 500})
   }
 }

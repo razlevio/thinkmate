@@ -2,96 +2,9 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import {
-	Apple,
-	Backpack,
-	BookHeart,
-	Command,
-	FerrisWheel,
-	Flame,
-	GaugeCircle,
-	Lightbulb,
-	LucideIcon,
-	PartyPopper,
-	Settings,
-	Shrub,
-	Users,
-} from "lucide-react"
+import { assistantsUI } from "@/types/assistants"
 import { cn } from "@/lib/utils"
-
-type SidebarItemProps = {
-	label: string
-	icon: LucideIcon
-	href: string
-  color?: string
-}
-
-const routes: SidebarItemProps[] = [
-  {
-		label: "Dashboard",
-		icon: GaugeCircle,
-		href: "/dashboard",
-	},
-	{
-		label: "Vision",
-		icon: Shrub,
-		href: "/vision",
-    color: "text-emerald-500",
-	},
-	{
-		label: "Philosophy",
-		icon: Lightbulb,
-		href: "/philosophy",
-    color: "text-orange-500",
-	},
-	{
-		label: "Legacy",
-		icon: Users,
-		href: "/legacy",
-    color: "text-violet-500",
-	},
-  {
-		label: "Dates",
-		icon: BookHeart,
-		href: "/dates",
-    color: "text-rose-500",
-	},
-	{
-		label: "Fun",
-		icon: FerrisWheel,
-		href: "/fun",
-    color: "text-cyan-500"
-	},
-	{
-		label: "Food",
-		icon: Apple,
-		href: "/food",
-    color: "text-fuchsia-500"
-	},
-  {
-		label: "Travel",
-		icon: Backpack,
-		href: "/travel",
-    color: "text-blue-500"
-	},
-	{
-		label: "Spicy",
-		icon: Flame,
-		href: "/spicy",
-    color: "text-yellow-600"
-	},
-	{
-		label: "Exploration",
-		icon: PartyPopper,
-		href: "/exploration",
-    color: "text-indigo-700"
-	},
-  {
-    label: "Settings",
-    icon: Settings,
-    href: "/settings",
-  }
-]
+import { Command } from "lucide-react"
 
 export function Sidebar() {
 	const pathname = usePathname()
@@ -103,16 +16,16 @@ export function Sidebar() {
             <h1 className="text-xl font-bold">Thinkmate</h1>
 					</Link>
           <div className="space-y-1">
-            {routes.map((route) => (
+            {assistantsUI.map((assistant) => (
               <Link
-                href={route.href}
-                key={route.href}
-                className={cn("group flex w-full cursor-pointer justify-start rounded-lg p-3 text-sm font-medium transition hover:bg-muted",
-									route.href === pathname ? "bg-muted" : "hover:bg-muted",
+                href={assistant.href}
+                key={assistant.href}
+                className={cn("group flex w-full cursor-pointer justify-start rounded-lg p-3 text-sm font-medium transition",
+									assistant.href === pathname ? assistant.bgColor : "hover:bg-muted",
 								)}>
                 <div className="flex flex-1 items-center">
-                  <route.icon className={cn("mr-3", route.color)} />
-                  {route.label}
+                  <assistant.icon className={cn("mr-3", assistant.color)} />
+                  {assistant.name}
                 </div>
               </Link>
             ))}

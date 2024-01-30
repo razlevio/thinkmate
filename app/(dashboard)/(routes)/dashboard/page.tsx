@@ -20,75 +20,85 @@ import {
 import { Card } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { useRouter } from "next/navigation"
-const tools = [
+
+const assistants = [
 	{
-		label: "Vision",
+		name: "Vision",
+		description: "",
 		icon: Shrub,
-		href: "/vision",
+		href: "/assistant/vision",
     color: "text-emerald-500",
-    bgColor: "bg-emerald-500/10",
+		bgColor: "bg-emerald-500/10"
 	},
 	{
-		label: "Philosophy",
+		name: "Philosophy",
+		description: "",
 		icon: Lightbulb,
-		href: "/philosophy",
+		href: "/assistant/philosophy",
     color: "text-orange-500",
-    bgColor: "bg-orange-500/10",
+		bgColor: "bg-orange-500/10"
 	},
 	{
-		label: "Legacy",
+		name: "Legacy",
+		description: "",
 		icon: Users,
-		href: "/legacy",
+		href: "/assistant/legacy",
     color: "text-violet-500",
-    bgColor: "bg-violet-500/10",
+		bgColor: "bg-violet-500/10"
 	},
   {
-		label: "Dates",
+		name: "Dates",
+		description: "",
 		icon: BookHeart,
-		href: "/dates",
+		href: "/assistant/dates",
     color: "text-rose-500",
-    bgColor: "bg-rose-500/10",
+		bgColor: "bg-rose-500/10"
 	},
 	{
-		label: "Fun",
+		name: "Fun",
+		description: "",
 		icon: FerrisWheel,
-		href: "/fun",
+		href: "/assistant/fun",
     color: "text-cyan-500",
-    bgColor: "bg-cyan-500/10",
+		bgColor: "bg-cyan-500/10"
 	},
 	{
-		label: "Food",
+		name: "Food",
+		description: "",
 		icon: Apple,
-		href: "/food",
+		href: "/assistant/food",
     color: "text-fuchsia-500",
-    bgColor: "bg-fuchsia-500/10",
+		bgColor: "bg-fuchsia-500/10"
 	},
   {
-		label: "Travel",
+		name: "Travel",
+		description: "",
 		icon: Backpack,
-		href: "/travel",
+		href: "/assistant/travel",
     color: "text-blue-500",
-    bgColor: "bg-blue-500/10",
+		bgColor: "bg-blue-500/10"
 	},
 	{
-		label: "Spicy",
+		name: "Spicy",
+		description: "",
 		icon: Flame,
-		href: "/spicy",
+		href: "/assistant/spicy",
     color: "text-yellow-600",
-    bgColor: "bg-yellow-600/10",
+		bgColor: "bg-yellow-600/10"
 	},
 	{
-		label: "Exploration",
+		name: "Exploration",
+		description: "",
 		icon: PartyPopper,
-		href: "/exploration",
+		href: "/assistant/exploration",
     color: "text-indigo-700",
-    bgColor: "bg-indigo-700/10",
+		bgColor: "bg-indigo-700/10"
 	},
 ]
 
 
 export default function DashboardPage() {
-  
+
   const router = useRouter()
 
   return (
@@ -98,18 +108,18 @@ export default function DashboardPage() {
         <p className="text-center text-sm font-light text-muted-foreground md:text-lg">Discover New Visions, Experiences, and Journeys with the help of cutting-edge AI assistants</p>
       </div>
       <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 md:px-10 lg:grid-cols-3 xl:px-24">
-        {tools.map((tool) => (
+        {assistants.map((assistant) => (
           <Card
-            key={tool.href}
+            key={assistant.href}
             className="flex cursor-pointer items-center justify-between p-4 transition hover:shadow-md"
-            onClick={() => router.push(tool.href)}
+            onClick={() => router.push(assistant.href)}
           >
             <div className="flex items-center gap-x-4">
-              <div className={cn("w-fit rounded-md p-2", tool.bgColor)}>
-                <tool.icon className={cn("size-8", tool.color)} />
+              <div className={cn("w-fit rounded-md p-2", assistant.bgColor)}>
+                <assistant.icon className={cn("size-8", assistant.color)} />
               </div>
               <div className="font-semibols">
-                {tool.label}
+                {assistant.name}
               </div>
             </div>
             <ArrowRight className="size-5" />

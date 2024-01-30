@@ -12,7 +12,7 @@ export default function DashboardLayout({
 			<div className="z-[80] hidden h-full border-r md:fixed md:inset-y-0 md:flex md:w-[250px] md:flex-col">
 			  <Sidebar />
 			</div>
-			<main className="md:pl-[250px]">
+			<main className="pb-[12rem] pt-[5rem] md:pl-[250px]">
 				<Navbar />
 				{children}
 			</main>
