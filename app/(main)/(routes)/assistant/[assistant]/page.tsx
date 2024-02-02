@@ -7,7 +7,7 @@ import { Message, experimental_useAssistant as useAssistant } from "ai/react"
 import { AlertCircle, CornerDownLeft, Shrub } from "lucide-react"
 import Textarea from "react-textarea-autosize"
 
-import { getAssistant } from "@/types/assistants"
+import { getAssistant } from "@/lib/assistants"
 import { cn } from "@/lib/utils"
 import { useEnterSubmit } from "@/hooks/use-enter-submit"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
@@ -37,14 +37,13 @@ export default function VisionPage({
 
 	const { formRef, onKeyDown } = useEnterSubmit()
 
-		// When status changes to accepting messages, focus the input:
-		const inputRef = useRef<HTMLTextAreaElement>(null)
-		useEffect(() => {
-			if (status === "awaiting_message") {
-				inputRef.current?.focus()
-			}
-		}, [status])
-
+	// When status changes to accepting messages, focus the input:
+	const inputRef = useRef<HTMLTextAreaElement>(null)
+	useEffect(() => {
+		if (status === "awaiting_message") {
+			inputRef.current?.focus()
+		}
+	}, [status])
 
 	const assistant = getAssistant(params.assistant)
 	if (!assistant) return router.push("/dashboard")
