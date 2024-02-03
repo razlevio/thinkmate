@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
 
 		const stream = OpenAIStream(response)
 		return new StreamingTextResponse(stream)
-		
+
 	} catch (error) {
 		console.log("[DATES_ERROR]", error)
 		return new NextResponse("Internal error", { status: 500 })

@@ -21,7 +21,7 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { Heading } from "@/components/heading"
+import { Heading } from "@/app/(main)/_components/heading"
 
 export default function VisionPage({
 	params,

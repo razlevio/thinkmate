@@ -1,9 +1,10 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useRef, useState } from "react"
 import { useChat } from "ai/react"
 import { CornerDownLeft, Zap } from "lucide-react"
 import Textarea from "react-textarea-autosize"
+import TypewriterComponent from "typewriter-effect"
 
 import { cn } from "@/lib/utils"
 import { useEnterSubmit } from "@/hooks/use-enter-submit"
@@ -14,29 +15,40 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { Heading } from "@/components/heading"
+import { Heading } from "@/app/(main)/_components/heading"
 
 export default function GeneratorPage() {
 	const generator = {
 		title: "Generator",
-		description: "Generate ideas about anything.",
+		description: "Generate ideas across various domains.",
 		icon: Zap,
 		iconColor: "text-primary",
 		bgColor: "bg-primary/10",
 	}
 
 	const { messages, input, handleInputChange, handleSubmit, isLoading } =
-		useChat()
+		useChat({
+			api: "/api/chat",
+		})
 	const status = isLoading ? "loading" : "awaiting_message"
 	const { formRef, onKeyDown } = useEnterSubmit()
 	const inputRef = useRef<HTMLTextAreaElement>(null)
+	const [isFocused, setIsFocused] = useState(false);
+
+	const handleFocus = () => setIsFocused(true);
+	const handleBlur = () => {
+			setIsFocused(false);
+			if (input.trim() === "") {
+					// Logic to show typewriter again if needed
+			}
+	};
 
 	return (
 		<div className="flex flex-col items-center justify-center px-6">
-			<Heading {...generator}>Generator</Heading>
+			<Heading {...generator} />
 			<div className="w-full max-w-6xl duration-300 ease-in-out animate-in">
 				<form onSubmit={handleSubmit} ref={formRef}>
-					<div className="flex items-center justify-between gap-4 rounded-md border px-12">
+					<div className="relative flex items-center gap-4 rounded-md border px-12">
 						<Textarea
 							ref={inputRef}
 							disabled={status !== "awaiting_message"}
@@ -45,11 +57,23 @@ export default function GeneratorPage() {
 							rows={1}
 							value={input}
 							onChange={handleInputChange}
-							placeholder={`...`}
+							onFocus={handleFocus}
+							onBlur={handleBlur}
 							spellCheck={false}
 							className="max-h-[200px] w-full resize-none bg-transparent py-[1.3rem] focus-within:outline-none"
 						/>
-
+						{input === "" && !isFocused && (
+							<div className="pointer-events-none absolute inset-x-12 inset-y-0 flex items-center justify-start bg-primary bg-clip-text text-transparent">
+								<TypewriterComponent
+									options={{
+										strings: ["Food", "Marketing", "Business"],
+										autoStart: true,
+										loop: true,
+										cursor: "|", // This enables the cursor
+									}}
+								/>
+							</div>
+						)}
 						<div className="self-start py-[1.3rem]">
 							<TooltipProvider>
 								<Tooltip>
@@ -70,6 +94,8 @@ export default function GeneratorPage() {
 					</div>
 				</form>
 			</div>
+
+			{/* TODO: Ideas section currnetly chat interface */}
 			<div className="mt-8 flex w-full max-w-6xl flex-col gap-4">
 				{messages.map((message, index) => (
 					<div
@@ -87,13 +113,15 @@ export default function GeneratorPage() {
 								<Zap />
 							</div>
 							<div>
-								<p className="text-sm font-bold">{message.role.toUpperCase()}</p>
+								<p className="text-sm font-bold">
+									{message.role.toUpperCase()}
+								</p>
 								<p>{message.content}</p>
 							</div>
 						</div>
 					</div>
 				))}
+			</div>
 		</div>
-	</div>
 	)
 }
