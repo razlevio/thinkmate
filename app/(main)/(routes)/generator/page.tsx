@@ -1,24 +1,17 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { useChat } from "ai/react"
 import { CornerDownLeft, Zap } from "lucide-react"
 import Textarea from "react-textarea-autosize"
 import TypewriterComponent from "typewriter-effect"
 
-import { cn } from "@/lib/utils"
 import { useEnterSubmit } from "@/hooks/use-enter-submit"
 import { Button } from "@/components/ui/button"
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip"
+import { Spinner } from "@/components/ui/spinner"
 import { Heading } from "@/app/(main)/_components/heading"
 
 export default function GeneratorPage() {
-	// Static data for the generator section
 	const generator = {
 		title: "Generator",
 		description: "Generate ideas across various domains.",
@@ -27,7 +20,6 @@ export default function GeneratorPage() {
 		bgColor: "bg-primary/10",
 	}
 
-	// Example prompts for the typewriter effect
 	const examplePrompts = [
 		"List fusion dishes blending Italian and Japanese cuisines.",
 		"Ideas to make comfort foods healthier.",
@@ -61,30 +53,41 @@ export default function GeneratorPage() {
 		"Accessible 'bucket list' experiences.",
 	]
 
-	// Hook to manage chat functionality
-	const {
-		messages,
-		input,
-		handleInputChange,
-		handleSubmit,
-		isLoading,
-		setMessages,
-	} = useChat({ api: "/api/ideas" })
-
-	// State and ref declarations
-	const status = isLoading ? "loading" : "awaiting_message"
-	const { formRef, onKeyDown } = useEnterSubmit()
+	const [isLoading, setIsLoading] = useState(false)
+	const [ideas, setIdeas] = useState([])
+	const [userPrompt, setUserPrompt] = useState("")
 	const [isFocused, setIsFocused] = useState(false)
+	const { formRef, onKeyDown } = useEnterSubmit()
 	const [typeWriterStrings, setTypeWriterStrings] = useState(examplePrompts)
-	const [userPrompt, setUserPrompt] = useState(input)
 
-	// Effect to shuffle typewriter strings on component mount
-	useEffect(() => {
-		const strings = shuffleArray(examplePrompts)
-		setTypeWriterStrings(strings)
-	}, [messages])
+	function shuffleArray(array: string[]) {
+		for (let i = array.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1))
+			;[array[i], array[j]] = [array[j], array[i]]
+		}
+		return array
+	}
 
-	// Handlers for input focus and blur events
+	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+		e.preventDefault()
+		setIsLoading(true)
+		const response = await fetch("http://localhost:3000/api/ideas", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ prompt: userPrompt }),
+		})
+
+		const { ideas } = await JSON.parse(await response.json())
+		setIdeas(ideas)
+		setIsLoading(false)
+	}
+
+	function handleInputChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+		setUserPrompt(e.target.value)
+	}
+
 	function handleFocus() {
 		setIsFocused(true)
 	}
@@ -94,48 +97,25 @@ export default function GeneratorPage() {
 		setIsFocused(false)
 	}
 
-	// Function to shuffle an array (Fisher-Yates shuffle algorithm)
-	function shuffleArray(array: string[]) {
-		for (let i = array.length - 1; i > 0; i--) {
-			const j = Math.floor(Math.random() * (i + 1))
-			;[array[i], array[j]] = [array[j], array[i]]
-		}
-		return array
-	}
-
-	// Custom submit handler to wrap the useChat submit functionality
-	function hSubmit(e: React.FormEvent<HTMLFormElement>) {
-		setMessages([])
-		handleSubmit(e)
-		setUserPrompt(input)
-	}
-
-	// Custom input change handler to wrap the useChat input change functionality
-	function hInputChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-		const newValue = e.target.value
-		handleInputChange(e)
-		setUserPrompt(newValue)
-	}
-
 	return (
 		<div className="flex flex-col items-center justify-center px-6">
 			<Heading {...generator} />
 			<div className="w-full max-w-6xl duration-300 ease-in-out animate-in">
-				<form onSubmit={hSubmit} ref={formRef}>
+				<form onSubmit={handleSubmit} ref={formRef}>
 					<div className="relative flex items-center gap-4 rounded-md border px-6 md:px-12">
 						<Textarea
-							disabled={status !== "awaiting_message"}
 							tabIndex={0}
-							onKeyDown={onKeyDown}
 							rows={1}
-							value={input === "" ? userPrompt : input}
-							onChange={hInputChange}
+							disabled={isLoading}
+							onKeyDown={onKeyDown}
+							value={userPrompt}
+							onChange={handleInputChange}
 							onFocus={handleFocus}
 							onBlur={handleBlur}
 							spellCheck={false}
 							className="max-h-[200px] w-full resize-none bg-transparent py-[1.3rem] focus-within:outline-none"
 						/>
-						{input === "" && userPrompt === "" && !isFocused && (
+						{userPrompt === "" && !isFocused && (
 							<div className="pointer-events-none absolute inset-x-6 inset-y-0 right-20 flex items-center justify-start bg-black bg-clip-text text-transparent dark:bg-white md:inset-x-12">
 								<TypewriterComponent
 									options={{
@@ -149,55 +129,29 @@ export default function GeneratorPage() {
 								/>
 							</div>
 						)}
-						{/* Submit prompt button */}
 						<div className="self-start py-[1.3rem]">
-							<TooltipProvider>
-								<Tooltip>
-									<TooltipTrigger asChild>
-										<Button
-											type="submit"
-											size="icon"
-											disabled={status !== "awaiting_message" || input === ""}
-										>
-											<CornerDownLeft />
-											<span className="sr-only">{`...`}</span>
-										</Button>
-									</TooltipTrigger>
-									<TooltipContent>{`...`}</TooltipContent>
-								</Tooltip>
-							</TooltipProvider>
+							<Button type="submit" size="icon" disabled={isLoading}>
+								<CornerDownLeft />
+								<span className="sr-only">Generate Button</span>
+							</Button>
 						</div>
 					</div>
 				</form>
 			</div>
-
-			{/* TODO: Ideas section currnetly chat interface */}
-			<div className="mt-8 flex w-full max-w-6xl flex-col gap-4">
-				{messages.map((message, index) => (
-					<div
-						key={index}
-						className={cn(
-							"flex items-center justify-between gap-4 rounded-md border p-4",
-							{
-								"bg-primary/10": message.role === "user",
-								"bg-primary/20": message.role === "assistant",
-							}
-						)}
-					>
-						<div className="flex items-center gap-4">
-							<div className="text-primary">
-								<Zap />
-							</div>
-							<div>
-								<p className="text-sm font-bold">
-									{message.role.toUpperCase()}
-								</p>
-								<p>{message.content}</p>
-							</div>
+			{/* TODO: use idea component skeletons instead of spinner */}
+			{isLoading ? (
+				<div className="mt-12">
+					<Spinner size="md" />
+				</div>
+			) : (
+				<div className="mt-12 grid max-w-6xl grid-cols-1 gap-4 md:grid-cols-3">
+					{ideas.map((idea) => (
+						<div key={idea} className="rounded-lg bg-muted p-4 shadow">
+							{idea}
 						</div>
-					</div>
-				))}
-			</div>
+					))}
+				</div>
+			)}
 		</div>
 	)
 }
