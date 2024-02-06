@@ -62,12 +62,17 @@ export default function GeneratorPage() {
 	]
 
 	// Hook to manage chat functionality
-	const { messages, input, handleInputChange, handleSubmit, isLoading } =
-		useChat({ api: "/api/chat" })
+	const {
+		messages,
+		input,
+		handleInputChange,
+		handleSubmit,
+		isLoading,
+		setMessages,
+	} = useChat({ api: "/api/ideas" })
 
 	// State and ref declarations
 	const status = isLoading ? "loading" : "awaiting_message"
-	const inputRef = useRef<HTMLTextAreaElement>(null)
 	const { formRef, onKeyDown } = useEnterSubmit()
 	const [isFocused, setIsFocused] = useState(false)
 	const [typeWriterStrings, setTypeWriterStrings] = useState(examplePrompts)
@@ -77,7 +82,7 @@ export default function GeneratorPage() {
 	useEffect(() => {
 		const strings = shuffleArray(examplePrompts)
 		setTypeWriterStrings(strings)
-	}, [])
+	}, [messages])
 
 	// Handlers for input focus and blur events
 	function handleFocus() {
@@ -100,6 +105,7 @@ export default function GeneratorPage() {
 
 	// Custom submit handler to wrap the useChat submit functionality
 	function hSubmit(e: React.FormEvent<HTMLFormElement>) {
+		setMessages([])
 		handleSubmit(e)
 		setUserPrompt(input)
 	}
@@ -118,7 +124,6 @@ export default function GeneratorPage() {
 				<form onSubmit={hSubmit} ref={formRef}>
 					<div className="relative flex items-center gap-4 rounded-md border px-6 md:px-12">
 						<Textarea
-							ref={inputRef}
 							disabled={status !== "awaiting_message"}
 							tabIndex={0}
 							onKeyDown={onKeyDown}
@@ -131,7 +136,7 @@ export default function GeneratorPage() {
 							className="max-h-[200px] w-full resize-none bg-transparent py-[1.3rem] focus-within:outline-none"
 						/>
 						{input === "" && userPrompt === "" && !isFocused && (
-							<div className="pointer-events-none absolute inset-x-6 inset-y-0 right-20 flex items-center justify-start bg-black bg-clip-text text-transparent dark:bg-white">
+							<div className="pointer-events-none absolute inset-x-6 inset-y-0 right-20 flex items-center justify-start bg-black bg-clip-text text-transparent dark:bg-white md:inset-x-12">
 								<TypewriterComponent
 									options={{
 										strings: typeWriterStrings,

@@ -7,3 +7,7 @@ export type AppConfig = {
 }
 
 export type Icon = Icon
+
+export type Idea = {
+	idea: string
+}
