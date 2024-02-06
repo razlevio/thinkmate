@@ -71,7 +71,7 @@ export default function GeneratorPage() {
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
 		setIsLoading(true)
-		const response = await fetch("http://localhost:3000/api/ideas", {
+		const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/ideas`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
