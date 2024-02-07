@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@clerk/nextjs"
 import { OpenAIStream, StreamingTextResponse } from "ai"
+
 import { openai } from "@/lib/openai"
 
 // IMPORTANT! Set the runtime to edge
@@ -8,7 +9,7 @@ export const runtime = "edge"
 
 export async function POST(req: NextRequest) {
 	const SYSTEM_PROMPT =
-		'Respond to every user message by generating three distinct ideas, each formatted as "{idea-name}:{idea-text}" and presented on separate lines. Each idea must be concise, not exceeding 300 characters, to ensure clarity and ease of understanding for immediate application. Strive for consistency in length and detail across all ideas to maintain uniformity. Each idea should be unique, relevant to the user context, and practically implementable. Use a colon (":") to separate the idea name from its description, and ensure ideas are separated by new lines for clear delineation in the frontend'
+		'Respond to every user message by generating three distinct ideas, each formatted as "{idea-title}:{idea-description}" and presented on separate lines. Each idea must be concise, not exceeding 300 characters, to ensure clarity and ease of understanding for immediate application. Strive for consistency in length and detail across all ideas to maintain uniformity. Each idea should be unique, relevant to the user context, and practically implementable. Use a colon (":") to separate the idea name from its description, and ensure ideas are separated by new lines for clear delineation in the frontend. NO MATTER WHAT INPUT YOU GOT YOU ARE OUTPUTING 3 AND ONLY 3 IDEAS'
 
 	try {
 		const { userId } = auth()

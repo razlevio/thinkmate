@@ -1,131 +1,43 @@
-"use client"
+import { auth } from "@clerk/nextjs"
+import { Home } from "lucide-react"
+import { Error } from "@/components/error"
+import { Heading } from "../../_components/heading"
+import { db } from "@/lib/db"
+import { Idea } from "../dashboard/_components/idea"
 
-import {
-	Apple,
-	Backpack,
-	BookHeart,
-	Command,
-	FerrisWheel,
-	Flame,
-	GaugeCircle,
-	Lightbulb,
-	LucideIcon,
-	Menu,
-	PartyPopper,
-	Settings,
-	Shrub,
-	Users,
-  ArrowRight,
-} from "lucide-react"
-import { Card } from "@/components/ui/card"
-import { cn } from "@/lib/utils"
-import { useRouter } from "next/navigation"
+export default async function DashboardPage() {
+	const { user, userId } = auth()
+	if (!userId) {
+		return <Error error="Unauthorized" />
+	}
+	const ideas = await db.idea.findMany({
+		where: {
+			userId: userId,
+		},
+	})
 
-const assistants = [
-	{
-		name: "Vision",
-		description: "",
-		icon: Shrub,
-		href: "/assistant/vision",
-    color: "text-emerald-500",
-		bgColor: "bg-emerald-500/10"
-	},
-	{
-		name: "Philosophy",
-		description: "",
-		icon: Lightbulb,
-		href: "/assistant/philosophy",
-    color: "text-orange-500",
-		bgColor: "bg-orange-500/10"
-	},
-	{
-		name: "Legacy",
-		description: "",
-		icon: Users,
-		href: "/assistant/legacy",
-    color: "text-violet-500",
-		bgColor: "bg-violet-500/10"
-	},
-  {
-		name: "Dates",
-		description: "",
-		icon: BookHeart,
-		href: "/assistant/dates",
-    color: "text-rose-500",
-		bgColor: "bg-rose-500/10"
-	},
-	{
-		name: "Fun",
-		description: "",
-		icon: FerrisWheel,
-		href: "/assistant/fun",
-    color: "text-cyan-500",
-		bgColor: "bg-cyan-500/10"
-	},
-	{
-		name: "Food",
-		description: "",
-		icon: Apple,
-		href: "/assistant/food",
-    color: "text-fuchsia-500",
-		bgColor: "bg-fuchsia-500/10"
-	},
-  {
-		name: "Travel",
-		description: "",
-		icon: Backpack,
-		href: "/assistant/travel",
-    color: "text-blue-500",
-		bgColor: "bg-blue-500/10"
-	},
-	{
-		name: "Spicy",
-		description: "",
-		icon: Flame,
-		href: "/assistant/spicy",
-    color: "text-yellow-600",
-		bgColor: "bg-yellow-600/10"
-	},
-	{
-		name: "Exploration",
-		description: "",
-		icon: PartyPopper,
-		href: "/assistant/exploration",
-    color: "text-indigo-700",
-		bgColor: "bg-indigo-700/10"
-	},
-]
-
-
-export default function DashboardPage() {
-
-  const router = useRouter()
-
-  return (
-    <div>
-      <div className="mb-8 space-y-4">
-        <h2 className="md:texl-4xl text-center text-2xl font-bold">Navigate Your World with AI</h2>
-        <p className="text-center text-sm font-light text-muted-foreground md:text-lg">Discover New Visions, Experiences, and Journeys with the help of cutting-edge AI assistants</p>
-      </div>
-      <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 md:px-10 lg:grid-cols-3 xl:px-24">
-        {assistants.map((assistant) => (
-          <Card
-            key={assistant.href}
-            className="flex cursor-pointer items-center justify-between p-4 transition hover:shadow-md"
-            onClick={() => router.push(assistant.href)}
-          >
-            <div className="flex items-center gap-x-4">
-              <div className={cn("w-fit rounded-md p-2", assistant.bgColor)}>
-                <assistant.icon className={cn("size-8", assistant.color)} />
-              </div>
-              <div className="font-semibols">
-                {assistant.name}
-              </div>
-            </div>
-            <ArrowRight className="size-5" />
-          </Card>
-        ))}
-      </div>
-    </div>
-  )
-}
+	return (
+		<div className="flex flex-col items-center justify-center px-6">
+			<Heading
+				title="Dashboard"
+				description="Welcome to your dashboard"
+				icon={Home}
+				iconColor="text-primary"
+				bgColor="bg-primary/10"
+			/>
+			<div className="flex w-full max-w-6xl flex-col justify-start">
+				<h1 className="text-xl font-bold">Your Saved Ideas</h1>
+				<div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
+					{ideas.map((idea) => (
+						<Idea
+							key={idea.id}
+							title={idea.title}
+							description={idea.description}
+							userprompt={idea.userprompt}
+						/>
+					))}
+			</div>
+		</div>
+		</div>
+	)
+					}

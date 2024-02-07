@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useChat } from "ai/react"
 import { CornerDownLeft, Zap } from "lucide-react"
 import Textarea from "react-textarea-autosize"
@@ -9,6 +9,8 @@ import TypewriterComponent from "typewriter-effect"
 import { useEnterSubmit } from "@/hooks/use-enter-submit"
 import { Button } from "@/components/ui/button"
 import { Heading } from "@/app/(main)/_components/heading"
+
+import { Idea } from "../generator/_components/idea"
 
 export default function GeneratorPage() {
 	const generator = {
@@ -52,11 +54,6 @@ export default function GeneratorPage() {
 		"Accessible 'bucket list' experiences.",
 	]
 
-	type Idea = {
-		topic: string
-		text: string
-	}
-
 	const [isFocused, setIsFocused] = useState(false)
 	const { formRef, onKeyDown } = useEnterSubmit()
 	const [typeWriterStrings, setTypeWriterStrings] = useState(examplePrompts)
@@ -70,7 +67,6 @@ export default function GeneratorPage() {
 		isLoading,
 	} = useChat({ api: "/api/ideas" })
 
-
 	function shuffleArray(array: string[]) {
 		for (let i = array.length - 1; i > 0; i--) {
 			const j = Math.floor(Math.random() * (i + 1))
@@ -78,7 +74,6 @@ export default function GeneratorPage() {
 		}
 		return array
 	}
-
 
 	async function hSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
@@ -141,30 +136,32 @@ export default function GeneratorPage() {
 					</div>
 				</form>
 			</div>
-			<div className="mt-12 grid max-w-6xl grid-cols-1 gap-4 md:grid-cols-3">
-			{messages[1]?.content && (
-        messages[1].content.split('\n').filter(line => line.trim() !== '') // Filter out empty lines
-        .map((idea, index) => {
-					  // Split the idea into name and text, then trim whitespace
-            let [ideaName, ideaText] = idea.split(':').map(part => part.trim());
-            // Cleanup step: Remove leading numbers and periods from the idea name
-            ideaName = ideaName?.replace(/^\d+\.\s*/, '');
+			<div className="mt-12 grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-3">
+				{messages[1]?.content &&
+					messages[1].content
+						.split("\n")
+						.filter((line) => line.trim() !== "") // Filter out empty lines
+						.map((idea, index) => {
+							// Split the idea into name and text, then trim whitespace
+							let [title, description] = idea
+								.split(":")
+								.map((part) => part.trim())
+							// Cleanup step: Remove leading numbers and periods from the idea name
+							title = title?.replace(/^\d+\.\s*/, "")
 
-            // Cleanup step: Remove quotation marks from ideaName and ideaText
-            ideaName = ideaName?.replace(/["“”]/g, '');
-            ideaText = ideaText?.replace(/["“”]/g, '');
+							// Cleanup step: Remove quotation marks from ideaName and ideaText
+							title = title?.replace(/["“”]/g, "")
+							description = description?.replace(/["“”]/g, "")
 
-						return (
-                <div
-                    key={index}
-                    className="flex flex-col gap-2 rounded-xl border bg-background p-6 text-left shadow"
-                >
-                    <h3 className="text-xl font-black">{ideaName}</h3>
-                    <p className="text-sm text-muted-foreground">{ideaText}</p>
-                </div>
-            );
-        })
-    )}
+							return (
+								<Idea
+									key={index}
+									title={title}
+									description={description}
+									userprompt={userPrompt}
+								/>
+							)
+						})}
 			</div>
 		</div>
 	)
