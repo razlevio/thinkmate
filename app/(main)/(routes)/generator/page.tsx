@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState, useEffect } from "react"
 import { useChat } from "ai/react"
 import { CornerDownLeft, Zap } from "lucide-react"
 import Textarea from "react-textarea-autosize"
@@ -8,7 +8,6 @@ import TypewriterComponent from "typewriter-effect"
 
 import { useEnterSubmit } from "@/hooks/use-enter-submit"
 import { Button } from "@/components/ui/button"
-import { Spinner } from "@/components/ui/spinner"
 import { Heading } from "@/app/(main)/_components/heading"
 
 export default function GeneratorPage() {
@@ -53,12 +52,24 @@ export default function GeneratorPage() {
 		"Accessible 'bucket list' experiences.",
 	]
 
-	const [isLoading, setIsLoading] = useState(false)
-	const [ideas, setIdeas] = useState([])
-	const [userPrompt, setUserPrompt] = useState("")
+	type Idea = {
+		topic: string
+		text: string
+	}
+
 	const [isFocused, setIsFocused] = useState(false)
 	const { formRef, onKeyDown } = useEnterSubmit()
 	const [typeWriterStrings, setTypeWriterStrings] = useState(examplePrompts)
+	const [userPrompt, setUserPrompt] = useState("")
+	const {
+		messages,
+		setMessages,
+		input,
+		handleInputChange,
+		handleSubmit,
+		isLoading,
+	} = useChat({ api: "/api/ideas" })
+
 
 	function shuffleArray(array: string[]) {
 		for (let i = array.length - 1; i > 0; i--) {
@@ -68,23 +79,15 @@ export default function GeneratorPage() {
 		return array
 	}
 
-	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault()
-		setIsLoading(true)
-		const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/ideas`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({ prompt: userPrompt }),
-		})
 
-		const { ideas } = await JSON.parse(await response.json())
-		setIdeas(ideas)
-		setIsLoading(false)
+	async function hSubmit(e: React.FormEvent<HTMLFormElement>) {
+		e.preventDefault()
+		setMessages([])
+		handleSubmit(e)
 	}
 
-	function handleInputChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+	function hInputChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+		handleInputChange(e)
 		setUserPrompt(e.target.value)
 	}
 
@@ -101,7 +104,7 @@ export default function GeneratorPage() {
 		<div className="flex flex-col items-center justify-center px-6">
 			<Heading {...generator} />
 			<div className="w-full max-w-6xl duration-300 ease-in-out animate-in">
-				<form onSubmit={handleSubmit} ref={formRef}>
+				<form onSubmit={hSubmit} ref={formRef}>
 					<div className="relative flex items-center gap-4 rounded-md border px-6 md:px-12">
 						<Textarea
 							tabIndex={0}
@@ -109,7 +112,7 @@ export default function GeneratorPage() {
 							disabled={isLoading}
 							onKeyDown={onKeyDown}
 							value={userPrompt}
-							onChange={handleInputChange}
+							onChange={hInputChange}
 							onFocus={handleFocus}
 							onBlur={handleBlur}
 							spellCheck={false}
@@ -138,20 +141,31 @@ export default function GeneratorPage() {
 					</div>
 				</form>
 			</div>
-			{/* TODO: use idea component skeletons instead of spinner */}
-			{isLoading ? (
-				<div className="mt-12">
-					<Spinner size="md" />
-				</div>
-			) : (
-				<div className="mt-12 grid max-w-6xl grid-cols-1 gap-4 md:grid-cols-3">
-					{ideas.map((idea) => (
-						<div key={idea} className="rounded-lg bg-muted p-4 shadow">
-							{idea}
-						</div>
-					))}
-				</div>
-			)}
+			<div className="mt-12 grid max-w-6xl grid-cols-1 gap-4 md:grid-cols-3">
+			{messages[1]?.content && (
+        messages[1].content.split('\n').filter(line => line.trim() !== '') // Filter out empty lines
+        .map((idea, index) => {
+					  // Split the idea into name and text, then trim whitespace
+            let [ideaName, ideaText] = idea.split(':').map(part => part.trim());
+            // Cleanup step: Remove leading numbers and periods from the idea name
+            ideaName = ideaName?.replace(/^\d+\.\s*/, '');
+
+            // Cleanup step: Remove quotation marks from ideaName and ideaText
+            ideaName = ideaName?.replace(/["“”]/g, '');
+            ideaText = ideaText?.replace(/["“”]/g, '');
+
+						return (
+                <div
+                    key={index}
+                    className="flex flex-col gap-2 rounded-xl border bg-background p-6 text-left shadow"
+                >
+                    <h3 className="text-xl font-black">{ideaName}</h3>
+                    <p className="text-sm text-muted-foreground">{ideaText}</p>
+                </div>
+            );
+        })
+    )}
+			</div>
 		</div>
 	)
 }

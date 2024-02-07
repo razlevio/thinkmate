@@ -1,45 +1,44 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@clerk/nextjs"
-import OpenAI from "openai"
-
-const openai = new OpenAI({
-	apiKey: process.env.OPENAI_API_KEY,
-})
+import { OpenAIStream, StreamingTextResponse } from "ai"
+import { openai } from "@/lib/openai"
 
 // IMPORTANT! Set the runtime to edge
 export const runtime = "edge"
 
 export async function POST(req: NextRequest) {
 	const SYSTEM_PROMPT =
-		'You are tasked with generating innovative ideas within a specified theme provided by a user. Your goal is to come up with 9 distinct and actionable ideas that are practical and relevant to the theme. These ideas should be diverse, covering various aspects of the topic to offer a comprehensive set of solutions or suggestions. Format your response in JSON, with each idea encapsulated as a string within an array of ideas. Ensure that each idea is succinct yet descriptive enough for straightforward interpretation and potential implementation. Aim for consistency in the length and complexity of the descriptions to facilitate uniform rendering in a UI application. Here is the structure for your response -> { ideas: ["idea 1", "idea 2", "idea 3", ..., "idea 9"]} Keep in mind: Each idea should be unique and stand on its own. Ideas should be practical and applicable to the given theme. Maintain a similar level of detail across all ideas to ensure uniformity.'
+		'Respond to every user message by generating three distinct ideas, each formatted as "{idea-name}:{idea-text}" and presented on separate lines. Each idea must be concise, not exceeding 300 characters, to ensure clarity and ease of understanding for immediate application. Strive for consistency in length and detail across all ideas to maintain uniformity. Each idea should be unique, relevant to the user context, and practically implementable. Use a colon (":") to separate the idea name from its description, and ensure ideas are separated by new lines for clear delineation in the frontend'
 
 	try {
-		// const { userId } = auth()
-		// if (!userId) return new NextResponse("Unauthorized", { status: 401 })
+		const { userId } = auth()
+
+		if (!userId) return new NextResponse("Unauthorized", { status: 401 })
 		if (!openai.apiKey)
 			return new NextResponse("OpenAI API Key not configured", { status: 500 })
 
-		const { prompt } = await req.json()
+		const { messages } = await req.json()
 
 		// Request the OpenAI API for the response based on the prompt
 		const response = await openai.chat.completions.create({
-			model: "gpt-3.5-turbo-0125",
-			response_format: { type: "json_object" },
+			model: "gpt-3.5-turbo",
+			stream: true,
+			max_tokens: 500,
+			temperature: 0.7,
+			top_p: 1,
+			frequency_penalty: 1,
+			presence_penalty: 1,
 			messages: [
 				{
 					role: "system",
 					content: SYSTEM_PROMPT,
 				},
-				{
-					role: "user",
-					content: prompt,
-				},
+				...messages,
 			],
 		})
 
-		return NextResponse.json(response.choices[0].message.content, {
-			status: 200,
-		})
+		const stream = OpenAIStream(response)
+		return new StreamingTextResponse(stream)
 	} catch (error) {
 		console.log("[IDEAS_ERROR]", error)
 		return new NextResponse("Internal error", { status: 500 })
