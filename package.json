@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky install",
-    "test": "echo \"No tests specified\" && exit 0"
+    "test": "echo \"No tests specified\" && exit 0",
+		"postinstall": "prisma generate"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.4",
