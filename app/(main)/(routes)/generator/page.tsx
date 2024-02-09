@@ -22,36 +22,38 @@ export default function GeneratorPage() {
 	}
 
 	const examplePrompts = [
-		"List fusion dishes blending Italian and Japanese cuisines.",
-		"Ideas to make comfort foods healthier.",
-		"Unique ice cream flavor combinations.",
-		"Themed at-home date night ideas.",
-		"Outdoor date activities for nature lovers.",
-		"Cultural date experiences in major cities.",
-		"Future tech that could change art experiences.",
-		"Sustainable urban living ideas.",
-		"Innovations in accessible, engaging education.",
-		"Philosophical questions unanswered by technology.",
-		"Applying ancient philosophies to modern dilemmas.",
-		"Finding meaning in a digital world.",
-		"Community-impacting personal project ideas.",
-		"Individual contributions to sustainability.",
-		"Using digital media for a positive legacy.",
-		"Unique DIY tech-craft projects.",
-		"Fun, unconventional physical activities.",
-		"Interactive storytelling experience ideas.",
-		"Under-the-radar unique travel destinations.",
-		"Skill-learning travel itineraries.",
-		"Imagining future travel modes.",
-		"Beyond-the-norm romantic gestures.",
-		"Couple growth and learning ideas.",
-		"Adventure and exploration in relationships.",
-		"Virtual real-world exploration experiences.",
-		"Unique scientific exploration places.",
-		"Community-based local exploration projects.",
-		"Emerging skills and hobbies due to tech.",
-		"Creative boundary-pushing challenges.",
-		"Accessible 'bucket list' experiences.",
+		"fusion dishes blending Italian and Japanese cuisines",
+		"Ideas to make comfort foods healthier",
+		"Unique ice cream flavor combinations",
+		"Themed at-home date night ideas",
+		"Outdoor date activities for nature lovers",
+		"Philosophical questions unanswered by technology",
+		"Applying ancient philosophies to modern dilemmas",
+		"Finding meaning in a digital world",
+		"Using digital media for a positive legacy",
+		"Unique DIY tech-craft projects",
+		"Fun, unconventional physical activities",
+		"Under-the-radar unique travel destinations",
+		"Beyond-the-norm romantic gestures",
+		"Couple growth and learning ideas",
+		"Adventure and exploration in relationships",
+		"Creative boundary-pushing challenges",
+		"Accessible 'bucket list' experiences",
+		"Ways to make my morning routine more energizing",
+		"Quick healthy dinner recipes for busy weeknights",
+		"Creative home office setup ideas",
+		"Fun weekend projects for DIY enthusiasts",
+		"Effective stress-relief techniques for professionals",
+		"Innovative ways to stay fit without a gym",
+		"Ideas for virtual team-building activities",
+		"Unique themes for a friend's party",
+		"Ideas to improve personal finance management",
+		"Ideas to enhance creativity in daily tasks",
+		"Ideas for upcycling household items into art",
+		"Travel-themed date night ideas at home",
+		"Mindfulness exercises for beginners",
+		"Homemade natural beauty treatment recipes",
+		"Ideas to make learning a new concept fun and effective"
 	]
 
 	const [isFocused, setIsFocused] = useState(false)
@@ -136,7 +138,7 @@ export default function GeneratorPage() {
 					</div>
 				</form>
 			</div>
-			<div className="mt-12 grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-3">
+			<div className="mt-12 grid max-w-6xl grid-cols-1 gap-6 xl:grid-cols-3">
 				{messages[1]?.content &&
 					messages[1].content
 						.split("\n")
