@@ -1,13 +1,13 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useUser } from "@clerk/nextjs"
 import { Message, experimental_useAssistant as useAssistant } from "ai/react"
-import { AlertCircle, CornerDownLeft, Shrub } from "lucide-react"
+import { AlertCircle, CornerDownLeft } from "lucide-react"
 import Textarea from "react-textarea-autosize"
 
-import { getAssistant } from "@/lib/assistants"
+import { assistantsStrings, getAssistant } from "@/lib/assistants"
 import { cn } from "@/lib/utils"
 import { useEnterSubmit } from "@/hooks/use-enter-submit"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
@@ -23,13 +23,21 @@ import {
 } from "@/components/ui/tooltip"
 import { Heading } from "@/app/(main)/_components/heading"
 
-export default function VisionPage({
+export default function AssistantPage({
 	params,
 }: {
 	params: { assistant: string }
 }) {
 	const { user } = useUser()
 	const router = useRouter()
+
+	useEffect(() => {
+		if (!params.assistant) return
+		if (!assistantsStrings.includes(params.assistant)) {
+			router.push("/assistants")
+		}
+	}, [params.assistant])
+
 	const { status, messages, input, submitMessage, handleInputChange, error } =
 		useAssistant({
 			api: `/api/${params.assistant}`,
@@ -50,13 +58,15 @@ export default function VisionPage({
 
 	return (
 		<div>
-			<Heading
-				title={assistant.name}
-				description={assistant.description}
-				icon={assistant.icon}
-				iconColor={assistant.color}
-				bgColor={assistant.bgColor}
-			/>
+			<div className="mx-auto flex w-full max-w-4xl px-4">
+				<Heading
+					title={assistant.name}
+					description={assistant.description}
+					icon={assistant.icon}
+					iconColor={assistant.color}
+					bgColor={assistant.bgColor}
+				/>
+			</div>
 
 			<div className="mx-auto flex w-full max-w-4xl flex-col px-4">
 				<div>

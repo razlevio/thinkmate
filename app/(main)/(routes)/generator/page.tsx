@@ -58,7 +58,7 @@ export default function GeneratorPage() {
 
 	const [isFocused, setIsFocused] = useState(false)
 	const { formRef, onKeyDown } = useEnterSubmit()
-	const [typeWriterStrings, setTypeWriterStrings] = useState(examplePrompts)
+	const [typeWriterStrings, setTypeWriterStrings] = useState(shuffleArray(examplePrompts))
 	const [userPrompt, setUserPrompt] = useState("")
 	const {
 		messages,

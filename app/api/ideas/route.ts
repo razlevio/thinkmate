@@ -2,10 +2,29 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@clerk/nextjs"
 import { OpenAIStream, StreamingTextResponse } from "ai"
 
+import { db } from "@/lib/db"
 import { openai } from "@/lib/openai"
 
 // IMPORTANT! Set the runtime to edge
 export const runtime = "edge"
+
+// Function to clean the userPrompt
+function cleanUserPrompt(prompt: string) {
+	// Remove numbers
+	prompt = prompt.toLowerCase()
+	let cleanedPrompt = prompt.replace(
+		/\b(one|two|three|four|five|six|seven|eight|nine|ten|for|generate|\d+)\b/gi,
+		""
+	)
+
+	// Remove the words "ideas" and "idea", case-insensitive
+	cleanedPrompt = cleanedPrompt.replace(/\b(ideas?|idea)\b/gi, "")
+
+	// Optionally, you might want to remove extra spaces left after removal, especially if you're removing whole words
+	cleanedPrompt = cleanedPrompt.replace(/\s\s+/g, " ").trim()
+
+	return cleanedPrompt
+}
 
 export async function POST(req: NextRequest) {
 	// const SYSTEM_PROMPTT =
@@ -23,9 +42,9 @@ export async function POST(req: NextRequest) {
 		const userPrompt = cleanUserPrompt(messages[0].content)
 		const INJECTION_PROMPT = `Generate exactly six distinct and actionable ideas about ${userPrompt}, format each idea as "{idea-title}:{idea-description}", ensuring they are concise (under 250 characters each) for clear comprehension and immediate action. Maintain consistent length and detail across ideas to ensure uniformity. Ideas must be unique, directly relevant to the provided context, and feasibly executable. Separate each idea with a new line, and use a colon (":") to delineate the idea title from its description. This structure is crucial for optimal presentation and user experience`
 
-		console.log("[USER_REQUEST]", messages)
-		console.log("[CLEANED_USER_PROMPT]", userPrompt)
-		console.log("[INJECTED_PROMPT]", INJECTION_PROMPT)
+		// console.log("[USER_REQUEST]", messages)
+		// console.log("[CLEANED_USER_PROMPT]", userPrompt)
+		// console.log("[INJECTED_PROMPT]", INJECTION_PROMPT)
 
 		// Request the OpenAI API for the response based on the prompt
 		const response = await openai.chat.completions.create({
@@ -55,20 +74,4 @@ export async function POST(req: NextRequest) {
 	}
 }
 
-// Function to clean the userPrompt
-function cleanUserPrompt(prompt: string) {
-	// Remove numbers
-	prompt = prompt.toLowerCase()
-	let cleanedPrompt = prompt.replace(
-		/\b(one|two|three|four|five|six|seven|eight|nine|ten|for|generate|\d+)\b/gi,
-		""
-	)
 
-	// Remove the words "ideas" and "idea", case-insensitive
-	cleanedPrompt = cleanedPrompt.replace(/\b(ideas?|idea)\b/gi, "")
-
-	// Optionally, you might want to remove extra spaces left after removal, especially if you're removing whole words
-	cleanedPrompt = cleanedPrompt.replace(/\s\s+/g, " ").trim()
-
-	return cleanedPrompt
-}

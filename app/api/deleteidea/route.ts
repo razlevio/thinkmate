@@ -2,10 +2,9 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@clerk/nextjs"
 
 import { db } from "@/lib/db"
-import { revalidateDashboard } from "@/app/(main)/_actions/main-actions"
 
 export async function POST(req: NextRequest) {
-	const { userId, user } = auth()
+	const { userId } = auth()
 	if (!userId) {
 		return new NextResponse("Unauthorized", { status: 401 })
 	}
@@ -14,7 +13,8 @@ export async function POST(req: NextRequest) {
 	if (!title || !description || !userprompt) {
 		return new NextResponse("Missing fields", { status: 400 })
 	}
-
+	
+	console.log("Deleting idea...")
 	try {
 		// First, find the idea's unique identifier based on the provided fields
 		const idea = await db.idea.findFirst({
@@ -35,7 +35,6 @@ export async function POST(req: NextRequest) {
 			})
 			if (res) {
 				console.log("Idea deleted")
-				await revalidateDashboard()
 				return new NextResponse("Idea deleted", { status: 200 })
 			}
 		} else {
@@ -44,7 +43,6 @@ export async function POST(req: NextRequest) {
 		}
 	} catch (error) {
 		console.error("Error saving idea", error)
-		// Return a 500 Internal Server Error response in case of an exception
 		return new NextResponse("Internal Server Error", { status: 500 })
 	}
 }

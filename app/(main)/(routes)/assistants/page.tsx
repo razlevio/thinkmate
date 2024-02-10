@@ -26,7 +26,7 @@ const assistants = [
 		name: "Vision",
 		description: "",
 		icon: Shrub,
-		href: "/assistant/vision",
+		href: "/assistants/vision",
     color: "text-emerald-500",
 		bgColor: "bg-emerald-500/10"
 	},
@@ -34,7 +34,7 @@ const assistants = [
 		name: "Philosophy",
 		description: "",
 		icon: Lightbulb,
-		href: "/assistant/philosophy",
+		href: "/assistants/philosophy",
     color: "text-orange-500",
 		bgColor: "bg-orange-500/10"
 	},
@@ -42,7 +42,7 @@ const assistants = [
 		name: "Legacy",
 		description: "",
 		icon: Users,
-		href: "/assistant/legacy",
+		href: "/assistants/legacy",
     color: "text-violet-500",
 		bgColor: "bg-violet-500/10"
 	},
@@ -50,7 +50,7 @@ const assistants = [
 		name: "Dates",
 		description: "",
 		icon: BookHeart,
-		href: "/assistant/dates",
+		href: "/assistants/dates",
     color: "text-rose-500",
 		bgColor: "bg-rose-500/10"
 	},
@@ -58,7 +58,7 @@ const assistants = [
 		name: "Fun",
 		description: "",
 		icon: FerrisWheel,
-		href: "/assistant/fun",
+		href: "/assistants/fun",
     color: "text-cyan-500",
 		bgColor: "bg-cyan-500/10"
 	},
@@ -66,7 +66,7 @@ const assistants = [
 		name: "Food",
 		description: "",
 		icon: Apple,
-		href: "/assistant/food",
+		href: "/assistants/food",
     color: "text-fuchsia-500",
 		bgColor: "bg-fuchsia-500/10"
 	},
@@ -74,7 +74,7 @@ const assistants = [
 		name: "Travel",
 		description: "",
 		icon: Backpack,
-		href: "/assistant/travel",
+		href: "/assistants/travel",
     color: "text-blue-500",
 		bgColor: "bg-blue-500/10"
 	},
@@ -82,7 +82,7 @@ const assistants = [
 		name: "Spicy",
 		description: "",
 		icon: Flame,
-		href: "/assistant/spicy",
+		href: "/assistants/spicy",
     color: "text-yellow-600",
 		bgColor: "bg-yellow-600/10"
 	},
@@ -90,14 +90,14 @@ const assistants = [
 		name: "Exploration",
 		description: "",
 		icon: PartyPopper,
-		href: "/assistant/exploration",
+		href: "/assistants/exploration",
     color: "text-indigo-700",
 		bgColor: "bg-indigo-700/10"
 	},
 ]
 
 
-export default function DashboardPage() {
+export default function AssistantsPage() {
 
   const router = useRouter()
 

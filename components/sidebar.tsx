@@ -20,18 +20,18 @@ export function Sidebar() {
 							key={route.href}
 							className={cn(
 								"group flex w-full cursor-pointer justify-start rounded-lg p-3 text-sm font-medium transition",
-								route.href === pathname ? route.bgColor : "hover:bg-primary/10"
+								pathname.includes(route.href) ? route.bgColor : "hover:bg-primary/10"
 							)}
 						>
 							<div className="flex flex-1 items-center">
 								<route.icon
 									className={cn(
 										"mr-3",
-										route.href === pathname ? route.color : ""
+										pathname.includes(route.href) ? route.color : ""
 									)}
 								/>
 								<span
-									className={cn(route.href === pathname ? route.color : "")}
+									className={cn(pathname.includes(route.href) ? route.color : "")}
 								>
 									{route.name}
 								</span>

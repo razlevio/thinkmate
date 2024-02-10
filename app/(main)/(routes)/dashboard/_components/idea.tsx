@@ -1,11 +1,15 @@
 "use client"
 
 import { useState } from "react"
+import { useAuth } from "@clerk/nextjs"
 import { Heart } from "lucide-react"
 import { toast } from "sonner"
 
 import { BackgroundGradient } from "@/components/ui/background-gradient"
 import { Button } from "@/components/ui/button"
+
+import { revalidate } from "../../../_actions/revalidate"
+
 
 type IdeaProps = {
 	title: string
@@ -22,7 +26,7 @@ export function Idea({ title, description, userprompt }: IdeaProps) {
 		setIsHearted(!isHearted)
 
 		const fetchPromise = isHearted
-			? fetch("/api/removeidea", {
+			? fetch("/api/deleteidea", {
 					method: "POST",
 					body: JSON.stringify({ title, description, userprompt }),
 				})
@@ -38,6 +42,7 @@ export function Idea({ title, description, userprompt }: IdeaProps) {
 		})
 
 		fetchPromise.finally(() => {
+			revalidate(`/`)
 			setIsSaving(false)
 		})
 	}

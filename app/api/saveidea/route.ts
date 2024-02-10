@@ -2,10 +2,9 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@clerk/nextjs"
 
 import { db } from "@/lib/db"
-import { revalidateDashboard } from "@/app/(main)/_actions/main-actions"
 
 export async function POST(req: NextRequest) {
-	const { userId, user } = auth()
+	const { userId } = auth()
 	if (!userId) {
 		return new NextResponse("Unauthorized", { status: 401 })
 	}
@@ -31,12 +30,10 @@ export async function POST(req: NextRequest) {
 		})
 		if (res) {
 			console.log("Idea saved")
-			await revalidateDashboard()
 			return new NextResponse("Idea saved", { status: 200 })
 		}
 	} catch (error) {
 		console.error("Error saving idea", error)
-		// Return a 500 Internal Server Error response in case of an exception
 		return new NextResponse("Internal Server Error", { status: 500 })
 	}
 }

@@ -2,7 +2,6 @@ import {
 	Apple,
 	Backpack,
 	BookHeart,
-	Command,
 	FerrisWheel,
 	Flame,
 	GaugeCircle,
@@ -23,6 +22,18 @@ type AssistantUIProps = {
 	bgColor: string
 	firstInitialMessage?: string
 }
+
+export const assistantsStrings = [
+	"vision",
+	"philosophy",
+	"legacy",
+	"dates",
+	"fun",
+	"food",
+	"travel",
+	"spicy",
+	"exploration",
+]
 
 export const assistantsUI: AssistantUIProps[] = [
   {
@@ -158,7 +169,6 @@ export const datesAssistant: AssistantUIProps =	{
 	firstInitialMessage: "Welcome to the art of crafting unforgettable dates! Tell me a bit about you and your partner's interests, and let's create some magical moments together. Whether it's a first date or a special anniversary, I'm here to help"
 
 }
-
 
 export const funAssistant: AssistantUIProps =	{
 	name: "Fun",

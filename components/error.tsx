@@ -8,10 +8,12 @@ type ErrorProps = {
 
 export function Error({ error }: ErrorProps) {
 	return (
-		<Alert variant="destructive">
-			<AlertCircle className="size-4" />
-			<AlertTitle>Error</AlertTitle>
-			<AlertDescription>{error}</AlertDescription>
-		</Alert>
+		<div className="flex flex-col items-center justify-center px-6">
+			<Alert variant="destructive">
+				<AlertCircle className="size-4" />
+				<AlertTitle>Error</AlertTitle>
+				<AlertDescription>{error}</AlertDescription>
+			</Alert>
+		</div>
 	)
 }
