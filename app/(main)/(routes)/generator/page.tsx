@@ -64,6 +64,7 @@ export default function GeneratorPage() {
 		messages,
 		setMessages,
 		input,
+		stop,
 		handleInputChange,
 		handleSubmit,
 		isLoading,
@@ -138,7 +139,7 @@ export default function GeneratorPage() {
 					</div>
 				</form>
 			</div>
-			<div className="mt-12 grid max-w-6xl grid-cols-1 gap-6 xl:grid-cols-3">
+			<div className="mt-12 grid max-w-3xl grid-cols-1 gap-6">
 				{messages[1]?.content &&
 					messages[1].content
 						.split("\n")
@@ -161,6 +162,7 @@ export default function GeneratorPage() {
 									title={title}
 									description={description}
 									userprompt={userPrompt}
+									isLoading={isLoading}
 								/>
 							)
 						})}
