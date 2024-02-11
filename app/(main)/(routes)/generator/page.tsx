@@ -6,6 +6,7 @@ import { CornerDownLeft, Zap } from "lucide-react"
 import Textarea from "react-textarea-autosize"
 import TypewriterComponent from "typewriter-effect"
 
+import { cn } from "@/lib/utils"
 import { useEnterSubmit } from "@/hooks/use-enter-submit"
 import { Button } from "@/components/ui/button"
 import { Heading } from "@/app/(main)/_components/heading"
@@ -53,12 +54,14 @@ export default function GeneratorPage() {
 		"Travel-themed date night ideas at home",
 		"Mindfulness exercises for beginners",
 		"Homemade natural beauty treatment recipes",
-		"Ideas to make learning a new concept fun and effective"
+		"Ideas to make learning a new concept fun and effective",
 	]
 
 	const [isFocused, setIsFocused] = useState(false)
 	const { formRef, onKeyDown } = useEnterSubmit()
-	const [typeWriterStrings, setTypeWriterStrings] = useState(shuffleArray(examplePrompts))
+	const [typeWriterStrings, setTypeWriterStrings] = useState(
+		shuffleArray(examplePrompts)
+	)
 	const [userPrompt, setUserPrompt] = useState("")
 	const {
 		messages,
@@ -69,6 +72,7 @@ export default function GeneratorPage() {
 		handleSubmit,
 		isLoading,
 	} = useChat({ api: "/api/ideas" })
+	const [generateMoreButton, setGenerateMoreButton] = useState(false)
 
 	function shuffleArray(array: string[]) {
 		for (let i = array.length - 1; i > 0; i--) {
@@ -82,6 +86,7 @@ export default function GeneratorPage() {
 		e.preventDefault()
 		setMessages([])
 		handleSubmit(e)
+		setGenerateMoreButton(true)
 	}
 
 	function hInputChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -96,6 +101,10 @@ export default function GeneratorPage() {
 	function handleBlur() {
 		setTypeWriterStrings(shuffleArray(examplePrompts))
 		setIsFocused(false)
+	}
+
+	function generateMoreIdes() {
+		
 	}
 
 	return (
@@ -166,6 +175,15 @@ export default function GeneratorPage() {
 								/>
 							)
 						})}
+			</div>
+			<div  className="mt-6 w-full">
+				<Button
+					className={cn(generateMoreButton && !isLoading ? null : "hidden")}
+					variant={"outline"}
+					onClick={generateMoreIdes}
+				>
+					Generate More
+				</Button>
 			</div>
 		</div>
 	)

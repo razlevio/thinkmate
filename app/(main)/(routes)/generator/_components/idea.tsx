@@ -1,11 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useChat } from "ai/react"
-import { Aperture, Heart } from "lucide-react"
+import { useState } from "react"
+import { Aperture, Heart, ArrowDownCircle, ArrowUpCircle } from "lucide-react"
 import { toast } from "sonner"
 
-import { openai } from "@/lib/openai"
 import { BackgroundGradient } from "@/components/ui/background-gradient"
 import { Button } from "@/components/ui/button"
 
@@ -24,20 +22,6 @@ export function Idea({ title, description, userprompt, isLoading }: IdeaProps) {
 	const [isExpanded, setIsExpanded] = useState(false)
 	const [ideaContext, setIdeaContext] = useState("")
 	const [isIdeaContextFetched, setIsIdeaContextFetched] = useState(false)
-
-	// useEffect(() => {
-	// 	async function fetchContext() {
-	// 		if (!isLoading) {
-	// 			const res = await fetch("/api/ideacontext", {
-	// 				method: "POST",
-	// 				body: JSON.stringify({ title, description, userprompt }),
-	// 			})
-	// 			const data = await res.json()
-	// 			setIdeaContext(data.choices[0].message.content)
-	// 		}
-	// 	}
-	// 	fetchContext()
-	// }, [isLoading])
 
 	async function handleHeartClick() {
 		setIsSaving(true)
@@ -95,6 +79,8 @@ export function Idea({ title, description, userprompt, isLoading }: IdeaProps) {
 	return (
 		<BackgroundGradient className="h-full rounded-[22px] bg-background p-6">
 			<div className="flex flex-col gap-2 rounded-xl bg-background text-left">
+
+				{/* Idea title and buttons */}
 				<div className="flex items-center justify-between">
 					<h3 className="text-xl font-black">{title}</h3>
 					<div>
@@ -105,7 +91,7 @@ export function Idea({ title, description, userprompt, isLoading }: IdeaProps) {
 							variant={"ghost"}
 							className="bg"
 						>
-							{isHearted ? <Heart fill="" /> : <Heart />}
+							{isHearted ? <Heart fill="red" className="" /> : <Heart />}
 						</Button>
 						<Button
 							onClick={handleExpandClick}
@@ -115,14 +101,18 @@ export function Idea({ title, description, userprompt, isLoading }: IdeaProps) {
 							className="bg"
 						>
 							{isExpanded ? (
-								<Aperture fill="" />
+								<ArrowUpCircle />
 							) : isLoading ? null : (
-								<Aperture />
+								<ArrowDownCircle />
 							)}
 						</Button>
 					</div>
 				</div>
+
+				{/* Idea description */}
 				<p className="text-sm text-muted-foreground">{description}</p>
+
+				{/* Estended context functionality */}
 				{isExpanded ? (
 					<div className="prose">
 						<ol className="list-decimal pl-6">

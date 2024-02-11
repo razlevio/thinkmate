@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
 
 		const INJECTION_PROMPT = `Observe the following idea:
 		title: ${title}, description: ${description}.
-		Generate 6 short and actionable context to enhance this idea, each point should offer valuable insight, address practical aspects, and suggest creative enhancements related to
+		Generate 6 and only 6 short and actionable context to enhance this idea, each point should offer valuable insight, address practical aspects, and suggest creative enhancements related to
 		the idea, making it more enjoyable, feasible, and memorable. Ensure your suggestions are relevant, actionable, short, on-point
 		and tailored to enhance the given idea, Format your response as a numbered list, providing
 		six short and concise distinct points of context one sentence maximum each`
