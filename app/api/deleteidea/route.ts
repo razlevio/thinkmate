@@ -9,37 +9,21 @@ export async function POST(req: NextRequest) {
 		return new NextResponse("Unauthorized", { status: 401 })
 	}
 
-	const { title, description, userprompt } = await req.json()
-	if (!title || !description || !userprompt) {
+	const { ideaId } = await req.json()
+	if (!ideaId) {
 		return new NextResponse("Missing fields", { status: 400 })
 	}
-	
+
 	console.log("Deleting idea...")
 	try {
-		// First, find the idea's unique identifier based on the provided fields
-		const idea = await db.idea.findFirst({
+		const res = await db.idea.delete({
 			where: {
-				userId,
-				userprompt,
-				title,
-				description,
+				id: ideaId,
 			},
 		})
-
-		// If the idea exists, delete it using its unique identifier
-		if (idea) {
-			const res = await db.idea.delete({
-				where: {
-					id: idea.id,
-				},
-			})
-			if (res) {
-				console.log("Idea deleted")
-				return new NextResponse("Idea deleted", { status: 200 })
-			}
-		} else {
-			console.log("Idea not found")
-			return new NextResponse("Idea not found", { status: 404 })
+		if (res) {
+			console.log("Idea deleted")
+			return new NextResponse("Idea deleted", { status: 200 })
 		}
 	} catch (error) {
 		console.error("Error saving idea", error)

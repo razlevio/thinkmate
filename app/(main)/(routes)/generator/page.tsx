@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useChat } from "ai/react"
+import { motion, AnimatePresence } from "framer-motion"
 import { CornerDownLeft, Zap } from "lucide-react"
 import Textarea from "react-textarea-autosize"
 import TypewriterComponent from "typewriter-effect"
@@ -9,6 +10,7 @@ import TypewriterComponent from "typewriter-effect"
 import { cn } from "@/lib/utils"
 import { useEnterSubmit } from "@/hooks/use-enter-submit"
 import { Button } from "@/components/ui/button"
+import { Button as Btn } from "@/components/ui/moving-borders"
 import { Heading } from "@/app/(main)/_components/heading"
 
 import { Idea } from "../generator/_components/idea"
@@ -56,6 +58,7 @@ export default function GeneratorPage() {
 		"Homemade natural beauty treatment recipes",
 		"Ideas to make learning a new concept fun and effective",
 	]
+	const [selectedPrompt, setSelectedPrompt] = useState("")
 
 	const [isFocused, setIsFocused] = useState(false)
 	const { formRef, onKeyDown } = useEnterSubmit()
@@ -104,13 +107,24 @@ export default function GeneratorPage() {
 	}
 
 	function generateMoreIdes() {
-		
+		console.log("generateMoreIdes")
+	}
+
+	function generateExampleIdeas() {
+		const randomPrompt =
+			examplePrompts[Math.floor(Math.random() * examplePrompts.length)]
+		setSelectedPrompt(randomPrompt)
 	}
 
 	return (
 		<div className="flex flex-col items-center justify-center px-6">
 			<Heading {...generator} />
-			<div className="w-full max-w-6xl duration-300 ease-in-out animate-in">
+			<motion.div
+				className="w-full max-w-6xl"
+				initial={{ opacity: 0, y: -20 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.3, ease: "easeInOut" }}
+			>
 				<form onSubmit={hSubmit} ref={formRef}>
 					<div className="relative flex items-center gap-4 rounded-md border px-6 md:px-12">
 						<Textarea
@@ -147,7 +161,7 @@ export default function GeneratorPage() {
 						</div>
 					</div>
 				</form>
-			</div>
+			</motion.div>
 			<div className="mt-12 grid max-w-3xl grid-cols-1 gap-6">
 				{messages[1]?.content &&
 					messages[1].content
@@ -176,10 +190,10 @@ export default function GeneratorPage() {
 							)
 						})}
 			</div>
-			<div  className="mt-6 w-full">
+			<div className="mt-12 flex w-full items-center justify-center">
 				<Button
-					className={cn(generateMoreButton && !isLoading ? null : "hidden")}
-					variant={"outline"}
+					className={cn("" ,generateMoreButton && !isLoading ? null : "hiddenn")}
+					variant={"secondary"}
 					onClick={generateMoreIdes}
 				>
 					Generate More

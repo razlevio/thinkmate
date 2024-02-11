@@ -16,7 +16,7 @@ model Idea {
   userprompt  String
   title       String
   description String
-  substeps    String[] @default([])
+  ideacontext String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

@@ -32,14 +32,9 @@ export default async function DashboardPage() {
 			{ideas.length > 0 ? (
 				<div className="flex w-full max-w-6xl flex-col justify-start">
 					<h1 className="text-xl font-bold">Your Saved Ideas</h1>
-					<div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
+					<div className="mt-6 grid max-w-3xl grid-cols-1 gap-6 self-center">
 						{ideas.map((idea: IdeaPrisma) => (
-							<Idea
-								key={idea.id}
-								title={idea.title}
-								description={idea.description}
-								userprompt={idea.userprompt}
-							/>
+							<Idea key={idea.id} {...idea} />
 						))}
 					</div>
 				</div>
