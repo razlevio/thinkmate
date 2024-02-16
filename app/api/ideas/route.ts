@@ -37,6 +37,8 @@ export async function POST(req: NextRequest) {
 			return new NextResponse("OpenAI API Key not configured", { status: 500 })
 
 		const { messages } = await req.json()
+
+
 		const userPrompt = cleanUserPrompt(messages[0].content)
 		const INJECTION_PROMPT = `Generate exactly three distinct and actionable ideas about ${userPrompt}, format each idea as "{idea-title}:{idea-description}" and separate each idea with a new line, using a colon (":") to delineate each idea title from its description. Ensure each idea is concise (under 250 characters each) for clear comprehension and immediate action, the ideas must be unique, and feasibly executable. Provide three ideas, no more, no less`
 
@@ -53,10 +55,7 @@ export async function POST(req: NextRequest) {
 					role: "system",
 					content: SYSTEM_PROMPT,
 				},
-				{
-					role: "user",
-					content: userPrompt,
-				},
+				...messages
 			],
 		})
 

@@ -1,8 +1,8 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import React, { useRef, useState } from "react"
 import { useChat } from "ai/react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import { CornerDownLeft, Zap } from "lucide-react"
 import Textarea from "react-textarea-autosize"
 import TypewriterComponent from "typewriter-effect"
@@ -10,7 +10,6 @@ import TypewriterComponent from "typewriter-effect"
 import { cn } from "@/lib/utils"
 import { useEnterSubmit } from "@/hooks/use-enter-submit"
 import { Button } from "@/components/ui/button"
-import { Button as Btn } from "@/components/ui/moving-borders"
 import { Heading } from "@/app/(main)/_components/heading"
 
 import { Idea } from "../generator/_components/idea"
@@ -58,10 +57,9 @@ export default function GeneratorPage() {
 		"Homemade natural beauty treatment recipes",
 		"Ideas to make learning a new concept fun and effective",
 	]
-	const [selectedPrompt, setSelectedPrompt] = useState("")
 
-	const [isFocused, setIsFocused] = useState(false)
 	const { formRef, onKeyDown } = useEnterSubmit()
+	const [isFocused, setIsFocused] = useState(false)
 	const [typeWriterStrings, setTypeWriterStrings] = useState(
 		shuffleArray(examplePrompts)
 	)
@@ -70,12 +68,14 @@ export default function GeneratorPage() {
 		messages,
 		setMessages,
 		input,
+		setInput,
 		stop,
 		handleInputChange,
 		handleSubmit,
 		isLoading,
 	} = useChat({ api: "/api/ideas" })
-	const [generateMoreButton, setGenerateMoreButton] = useState(false)
+
+	const [isGenerateMoreButton, setIsGenerateMoreButton] = useState(false)
 
 	function shuffleArray(array: string[]) {
 		for (let i = array.length - 1; i > 0; i--) {
@@ -89,7 +89,7 @@ export default function GeneratorPage() {
 		e.preventDefault()
 		setMessages([])
 		handleSubmit(e)
-		setGenerateMoreButton(true)
+		setIsGenerateMoreButton(true)
 	}
 
 	function hInputChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -106,14 +106,10 @@ export default function GeneratorPage() {
 		setIsFocused(false)
 	}
 
-	function generateMoreIdes() {
-		console.log("generateMoreIdes")
-	}
-
-	function generateExampleIdeas() {
-		const randomPrompt =
-			examplePrompts[Math.floor(Math.random() * examplePrompts.length)]
-		setSelectedPrompt(randomPrompt)
+	async function handleGenerateMore(e: React.FormEvent<HTMLFormElement>) {
+		e.preventDefault()
+		await setInput(userPrompt)
+		handleSubmit(e)
 	}
 
 	return (
@@ -163,41 +159,47 @@ export default function GeneratorPage() {
 				</form>
 			</motion.div>
 			<div className="mt-12 grid max-w-3xl grid-cols-1 gap-6">
-				{messages[1]?.content &&
-					messages[1].content
-						.split("\n")
-						.filter((line) => line.trim() !== "") // Filter out empty lines
-						.map((idea, index) => {
-							// Split the idea into name and text, then trim whitespace
-							let [title, description] = idea
-								.split(":")
-								.map((part) => part.trim())
-							// Cleanup step: Remove leading numbers and periods from the idea name
-							title = title?.replace(/^\d+\.\s*/, "")
+				{messages
+					.filter((message) => message.role === "assistant") // Filter for messages from the AI
+					.flatMap((message, messageIndex) =>
+						message.content
+							.split("\n")
+							.filter((line) => line.trim() !== "") // Filter out empty lines
+							.map((idea, index) => {
+								// Split the idea into name and text, then trim whitespace
+								let [title, description] = idea
+									.split(":")
+									.map((part) => part.trim())
+								// Cleanup step: Remove leading numbers and periods from the idea name
+								title = title?.replace(/^\d+\.\s*/, "")
+								// Cleanup step: Remove quotation marks from title and description
+								title = title?.replace(/["“”]/g, "")
+								description = description?.replace(/["“”]/g, "")
 
-							// Cleanup step: Remove quotation marks from ideaName and ideaText
-							title = title?.replace(/["“”]/g, "")
-							description = description?.replace(/["“”]/g, "")
-
-							return (
-								<Idea
-									key={index}
-									title={title}
-									description={description}
-									userprompt={userPrompt}
-									isLoading={isLoading}
-								/>
-							)
-						})}
+								return (
+									<Idea
+										key={`${messageIndex}-${index}`} // Unique key for each idea, combining message and idea index
+										title={title}
+										description={description}
+										userprompt={userPrompt}
+										isLoading={isLoading}
+									/>
+								)
+							})
+					)}
 			</div>
 			<div className="mt-12 flex w-full items-center justify-center">
-				<Button
-					className={cn("" ,generateMoreButton && !isLoading ? null : "hiddenn")}
-					variant={"secondary"}
-					onClick={generateMoreIdes}
-				>
-					Generate More
-				</Button>
+				<form onSubmit={handleSubmit}>
+					<Button
+						disabled={isLoading}
+						className={isGenerateMoreButton && !isLoading ? "block" : "hidden"}
+						variant={"outline"}
+						type="submit"
+						onClick={() => setInput(userPrompt)}
+					>
+						Generate More
+					</Button>
+				</form>
 			</div>
 		</div>
 	)
