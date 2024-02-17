@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react"
 import { useChat } from "ai/react"
 import { motion } from "framer-motion"
-import { CornerDownLeft, Zap } from "lucide-react"
+import { CornerDownLeft, Plus, PlusCircle, Shuffle, Zap } from "lucide-react"
 import Textarea from "react-textarea-autosize"
 import TypewriterComponent from "typewriter-effect"
 
@@ -106,10 +106,13 @@ export default function GeneratorPage() {
 		setIsFocused(false)
 	}
 
-	async function handleGenerateMore(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault()
-		await setInput(userPrompt)
-		handleSubmit(e)
+	function handleRandomGeneration() {
+		setMessages([])
+		const randomPrompt =
+			examplePrompts[Math.floor(Math.random() * examplePrompts.length)]
+		setUserPrompt(randomPrompt)
+		setInput(randomPrompt)
+		setIsGenerateMoreButton(true)
 	}
 
 	return (
@@ -158,6 +161,17 @@ export default function GeneratorPage() {
 					</div>
 				</form>
 			</motion.div>
+			<form onSubmit={handleSubmit}>
+				<Button
+					onClick={handleRandomGeneration}
+					disabled={isLoading}
+					className="bg-background-300/10 border-primary-500/20 relative mx-auto mt-4 rounded-full border px-4 py-2 text-center text-foreground backdrop-blur-sm hover:text-primary-foreground"
+				>
+					<span>Random</span>
+					<Shuffle className="ml-2 size-4" />
+					<div className="absolute inset-x-0  -bottom-px mx-auto h-px w-3/4 bg-gradient-to-r from-transparent via-primary to-transparent" />
+				</Button>
+			</form>
 			<div className="mt-12 grid max-w-3xl grid-cols-1 gap-6">
 				{messages
 					.filter((message) => message.role === "assistant") // Filter for messages from the AI
@@ -192,12 +206,16 @@ export default function GeneratorPage() {
 				<form onSubmit={handleSubmit}>
 					<Button
 						disabled={isLoading}
-						className={isGenerateMoreButton && !isLoading ? "block" : "hidden"}
-						variant={"outline"}
+						className={cn(
+							"bg-background-300/10 border-primary-500/20 relative mx-auto mt-4 rounded-full border px-4 py-2 text-center text-foreground backdrop-blur-sm hover:text-primary-foreground",
+							!isGenerateMoreButton && "hidden"
+						)}
 						type="submit"
 						onClick={() => setInput(userPrompt)}
 					>
-						Generate More
+						<span>Load more</span>
+						<Plus className="ml-2 size-4" />
+						<div className="absolute inset-x-0  -bottom-px mx-auto h-px w-3/4 bg-gradient-to-r from-transparent via-primary to-transparent" />
 					</Button>
 				</form>
 			</div>
