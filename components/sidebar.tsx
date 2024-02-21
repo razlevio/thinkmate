@@ -6,11 +6,15 @@ import { usePathname } from "next/navigation"
 import { routes } from "@/lib/routes"
 import { cn } from "@/lib/utils"
 import { Logo } from "@/components/logo"
+import { FreeCounter } from "@/components/free-counter"
+type SidebarProps = {
+	apiLimitCount: number
+}
 
-export function Sidebar() {
+export function Sidebar({ apiLimitCount }: SidebarProps) {
 	const pathname = usePathname()
 	return (
-		<div className="flex h-full flex-col space-y-4 py-4">
+		<div className="flex h-full flex-col space-y-4 bg-muted py-4">
 			<div className="flex-1 px-3 py-2">
 				<Logo />
 				<div className="space-y-1">
@@ -20,7 +24,9 @@ export function Sidebar() {
 							key={route.href}
 							className={cn(
 								"group flex w-full cursor-pointer justify-start rounded-lg p-3 text-sm font-medium transition",
-								pathname.includes(route.href) ? route.bgColor : "hover:bg-primary/10"
+								pathname.includes(route.href)
+									? route.bgColor
+									: "hover:bg-primary/10"
 							)}
 						>
 							<div className="flex flex-1 items-center">
@@ -31,7 +37,9 @@ export function Sidebar() {
 									)}
 								/>
 								<span
-									className={cn(pathname.includes(route.href) ? route.color : "")}
+									className={cn(
+										pathname.includes(route.href) ? route.color : ""
+									)}
 								>
 									{route.name}
 								</span>
@@ -40,6 +48,7 @@ export function Sidebar() {
 					))}
 				</div>
 			</div>
+			<FreeCounter apiLimitCount={apiLimitCount} />
 		</div>
 	)
 }

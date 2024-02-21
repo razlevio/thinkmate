@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@clerk/nextjs"
 import { OpenAIStream, StreamingTextResponse } from "ai"
-
+import { increaseApiLimit, checkApiLimit } from "@/lib/api-limit"
 import { openai } from "@/lib/openai"
 
 // IMPORTANT! Set the runtime to edge

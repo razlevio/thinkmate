@@ -1,4 +1,4 @@
-import { GaugeCircle, LucideIcon, Settings, Zap, Bot } from "lucide-react"
+import { Bot, GaugeCircle, LucideIcon, Settings, Zap } from "lucide-react"
 
 type RouteProps = {
 	name: string
@@ -23,13 +23,13 @@ export const routes: RouteProps[] = [
 		color: "text-primary",
 		bgColor: "bg-primary/10",
 	},
-	{
-		name: "Assistants",
-		href: "/assistants",
-		icon: Bot,
-		color: "text-primary",
-		bgColor: "bg-primary/10",
-	},
+	// {
+	// 	name: "Assistants",
+	// 	href: "/assistants",
+	// 	icon: Bot,
+	// 	color: "text-primary",
+	// 	bgColor: "bg-primary/10",
+	// },
 	{
 		name: "Settings",
 		href: "/settings",

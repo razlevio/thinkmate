@@ -1,0 +1,28 @@
+export const examplePrompts = [
+	"Ideas to make comfort foods healthier",
+	"Unique ice cream flavor combinations",
+	"Themed at-home date night ideas",
+	"Outdoor date activities for nature lovers",
+	"Unique DIY tech-craft projects",
+	"Fun, unconventional physical activities",
+	"Under-the-radar unique travel destinations",
+	"Beyond-the-norm romantic gestures",
+	"Couple growth and learning ideas",
+	"Creative boundary-pushing challenges",
+	"Accessible 'bucket list' experiences",
+	"Ways to make my morning routine more energizing",
+	"Quick healthy dinner recipes for busy weeknights",
+	"Creative home office setup ideas",
+	"Fun weekend projects for DIY enthusiasts",
+	"Effective stress-relief techniques for professionals",
+	"Innovative ways to stay fit without a gym",
+	"Unique themes for a friend's party",
+	"Ideas to improve personal finance management",
+	"Ideas to enhance creativity in daily tasks",
+	"Ideas for upcycling household items into art",
+	"Travel-themed date night ideas at home",
+	"Mindfulness exercises for beginners",
+	"Ideas to make learning a new concept fun and effective",
+]
+
+export const MAX_FREE_COUNTS = 5
