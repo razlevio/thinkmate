@@ -8,12 +8,13 @@ Thinkmate is an innovative application designed to spark creativity and provide 
 
 ## Features
 
-- **Personalized Idea Generation**: Input any prompt and receive tailored ideas to inspire you.
-- **Engaging User Interface**: Ideas are presented in individual components for easy browsing and interaction.
-- **User Engagement**: Like your favorite ideas to save them to your personal space for later reference.
-- **Detailed Insights**: Each idea comes with additional context and actionable sub-steps to help bring your ideas to life.
-- **Stripe monthly subscrtiption**
-- **Free tier with API limiting**
+- **Personalized Idea Generation**: Input any prompt and receive tailored ideas to inspire you
+- **Engaging User Interface**: Ideas are presented in individual components for easy browsing and interaction
+- **User Engagement**: Like your favorite ideas to save them to your personal space for later reference
+- **Detailed Insights**: Each idea comes with additional context and actionable sub-steps to help bring your ideas to life
+- **Free tier with API limiting**: Free 10 ideas generations to try the application
+- **Stripe monthly subscrtiption**: Monthly subscription for unlimited ideas generation and storage
+
 ## Usage
 
 To generate ideas, simply:
@@ -21,3 +22,5 @@ To generate ideas, simply:
 1. Enter your prompt in the provided input field.
 2. Hit the "Enter" or "Generate Button" button to receive your personalized ideas.
 3. Browse through the ideas, like your favorites, and explore additional context and steps to actualize them.
+
+For inspiration, try the Random button.

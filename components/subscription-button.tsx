@@ -5,6 +5,7 @@ import axios from "axios"
 import { Rocket } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
 
 type SubscriptionButtonProps = {
 	isPro: boolean
@@ -19,6 +20,7 @@ export default function SubscriptionButton({ isPro }: SubscriptionButtonProps) {
 			const respnse = await axios.get("/api/stripe")
 			window.location.href = respnse.data.url
 		} catch (error) {
+			toast.error("Something went wrong")
 			console.log("BILLING_ERROR", error)
 		} finally {
 			setLoading(false)

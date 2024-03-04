@@ -16,6 +16,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 } from "@/components/ui/dialog"
+import { toast } from "sonner"
 
 export function ProModal() {
 	const [loading, setLoading] = useState(false)
@@ -33,10 +34,10 @@ export function ProModal() {
 			const response = await axios.get("/api/stripe")
 			window.location.href = response.data.url
 		} catch (error) {
+			toast.error("Something went wrong")
 			console.log(error, "STRIPE_CLIENT_ERROR")
 		} finally {
 			setLoading(false)
-
 		}
 	}
 
@@ -68,7 +69,13 @@ export function ProModal() {
 						</Card>
 					))}
 					<DialogFooter>
-						<Button onClick={onSubscribe} variant={"premium"} size="lg" className="w-full">
+						<Button
+							disabled={loading}
+							onClick={onSubscribe}
+							variant={"premium"}
+							size="lg"
+							className="w-full"
+						>
 							Upgrade <Rocket className="ml-2 size-4" />
 						</Button>
 					</DialogFooter>

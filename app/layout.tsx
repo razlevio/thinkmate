@@ -9,6 +9,7 @@ import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { ClerkProvider } from "@clerk/nextjs"
 import { ModalProvider } from "@/components/providers/modal-provider"
+import {CrispProvider} from "@/components/providers/crisp-provider"
 
 export const metadata: Metadata = {
   title: {
@@ -53,6 +54,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className={cn("h-full", geist.className, geist.variable, geistMono.variable)} suppressHydrationWarning>
+				<CrispProvider />
         <body>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             <ModalProvider />

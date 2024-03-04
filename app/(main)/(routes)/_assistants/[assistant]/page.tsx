@@ -36,7 +36,7 @@ export default function AssistantPage({
 		if (!assistantsStrings.includes(params.assistant)) {
 			router.push("/assistants")
 		}
-	}, [params.assistant])
+	}, [params.assistant, router])
 
 	const { status, messages, input, submitMessage, handleInputChange, error } =
 		useAssistant({

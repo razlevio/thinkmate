@@ -100,10 +100,7 @@ export default function GeneratorPage() {
 				setApiLimitStatus(allowed)
 				setApiLimitCount(count)
 			} catch (error) {
-				console.error(
-					"Error updating API limit status after submission:",
-					error
-				)
+				console.error("Error updating API limit status after submission:", error)
 			}
 		}
 	}
