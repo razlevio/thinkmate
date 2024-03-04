@@ -8,6 +8,7 @@ import { Toaster } from "sonner";
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { ClerkProvider } from "@clerk/nextjs"
+import { ModalProvider } from "@/components/providers/modal-provider"
 
 export const metadata: Metadata = {
   title: {
@@ -54,7 +55,8 @@ export default function RootLayout({
       <html lang="en" className={cn("h-full", geist.className, geist.variable, geistMono.variable)} suppressHydrationWarning>
         <body>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            <Toaster position="bottom-center" />
+            <ModalProvider />
+						<Toaster position="bottom-center" />
             {children}
             <Analytics />
             <SpeedInsights />

@@ -10,6 +10,7 @@ import TypewriterComponent from "typewriter-effect"
 import { examplePrompts } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 import { useEnterSubmit } from "@/hooks/use-enter-submit"
+import { useProModal } from "@/hooks/use-pro-modal"
 import { Button } from "@/components/ui/button"
 import { Heading } from "@/app/(main)/_components/heading"
 
@@ -19,12 +20,12 @@ import { Idea } from "../generator/_components/idea"
 export default function GeneratorPage() {
 	const generator = {
 		title: "Generator",
-		description: "Generate ideas across various domains.",
+		description: "Generate ideas across various domains",
 		icon: Zap,
 		iconColor: "text-primary",
 		bgColor: "bg-primary/10",
 	}
-
+	const proModal = useProModal()
 	const { formRef, onKeyDown } = useEnterSubmit()
 	const [isFocused, setIsFocused] = useState(false)
 	const [typeWriterStrings, setTypeWriterStrings] = useState(
@@ -34,7 +35,7 @@ export default function GeneratorPage() {
 	const [isGenerateMoreButton, setIsGenerateMoreButton] = useState(false)
 	const [apiLimitStatus, setApiLimitStatus] = useState(false)
 	const [apiLimitCount, setApiLimitCount] = useState(0)
-	const [showSubscriptionModal, setShowSubscriptionModal] = useState(false)
+	const [subscription, setSubscription] = useState(false)
 
 	useEffect(() => {
 		fetchApiLimitStatus()
@@ -45,6 +46,14 @@ export default function GeneratorPage() {
 			.catch((error) =>
 				console.error("Failed to fetch API limit status:", error)
 			)
+
+		fetchSubscriptionStatus()
+			.then((status) => {
+				setSubscription(status)
+			})
+			.catch((error) => {
+				console.error("Failed to fetch subscription status:", error)
+			})
 	}, [])
 
 	const {
@@ -57,6 +66,9 @@ export default function GeneratorPage() {
 		handleSubmit,
 		isLoading,
 	} = useChat({ api: "/api/ideas" })
+
+	// *********************************** FUNCTIONS *********************************** //
+
 	function shuffleArray(array: string[]) {
 		for (let i = array.length - 1; i > 0; i--) {
 			const j = Math.floor(Math.random() * (i + 1))
@@ -68,8 +80,8 @@ export default function GeneratorPage() {
 	async function handleGenerate(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
 
-		if (!apiLimitStatus) {
-			setShowSubscriptionModal(true)
+		if (!apiLimitStatus && !subscription) {
+			proModal.onOpen()
 			setIsGenerateMoreButton(false)
 			return
 		}
@@ -79,16 +91,20 @@ export default function GeneratorPage() {
 		setIsGenerateMoreButton(true)
 
 		// Increment API usage
-		await incrementApiUsage()
-		revalidate("/")
-
-		// Fetch and update API limit status after submission
-		try {
-			const { allowed, count } = await fetchApiLimitStatus()
-			setApiLimitStatus(allowed)
-			setApiLimitCount(count)
-		} catch (error) {
-			console.error("Error updating API limit status after submission:", error)
+		if (!subscription) {
+			await incrementApiUsage()
+			revalidate("/")
+			// Fetch and update API limit status after submission
+			try {
+				const { allowed, count } = await fetchApiLimitStatus()
+				setApiLimitStatus(allowed)
+				setApiLimitCount(count)
+			} catch (error) {
+				console.error(
+					"Error updating API limit status after submission:",
+					error
+				)
+			}
 		}
 	}
 
@@ -97,52 +113,29 @@ export default function GeneratorPage() {
 		// Update the input again with the user-prompt to allow for generating more ideas
 		await setInput(userPrompt)
 
-		console.log("INPUT -> ", input)
-
-		if (!apiLimitStatus) {
-			setShowSubscriptionModal(true)
+		if (!apiLimitStatus && !subscription) {
+			proModal.onOpen()
 			setIsGenerateMoreButton(false)
 			return
 		}
 		handleSubmit(e)
-		// Increment API usage
-		await incrementApiUsage()
-		revalidate("/")
 
-		// Fetch and update API limit status after submission
-		try {
-			const { allowed, count } = await fetchApiLimitStatus()
-			setApiLimitStatus(allowed)
-			setApiLimitCount(count)
-		} catch (error) {
-			console.error("Error updating API limit status after submission:", error)
-		}
-	}
+		if (!subscription) {
+			// Increment API usage
+			await incrementApiUsage()
+			revalidate("/")
 
-	async function handleLoadMoree(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault()
-		// Update the input again with the user-prompt to allow for generating more ideas
-		await setInput(userPrompt)
-
-		console.log("INPUT -> ", input)
-
-		if (!apiLimitStatus) {
-			setShowSubscriptionModal(true)
-			setIsGenerateMoreButton(false)
-			return
-		}
-		handleSubmit(e)
-		// Increment API usage
-		await incrementApiUsage()
-		revalidate("/")
-
-		// Fetch and update API limit status after submission
-		try {
-			const { allowed, count } = await fetchApiLimitStatus()
-			setApiLimitStatus(allowed)
-			setApiLimitCount(count)
-		} catch (error) {
-			console.error("Error updating API limit status after submission:", error)
+			// Fetch and update API limit status after submission
+			try {
+				const { allowed, count } = await fetchApiLimitStatus()
+				setApiLimitStatus(allowed)
+				setApiLimitCount(count)
+			} catch (error) {
+				console.error(
+					"Error updating API limit status after submission:",
+					error
+				)
+			}
 		}
 	}
 
@@ -161,9 +154,13 @@ export default function GeneratorPage() {
 	}
 
 	function handleRandomGeneration() {
+		if (!apiLimitStatus && !subscription) {
+			proModal.onOpen()
+			return
+		}
+
 		setMessages([])
-		const randomPrompt =
-			examplePrompts[Math.floor(Math.random() * examplePrompts.length)]
+		const randomPrompt = examplePrompts[Math.floor(Math.random() * examplePrompts.length)]
 		setUserPrompt(randomPrompt)
 		setInput(randomPrompt)
 		setIsGenerateMoreButton(true)
@@ -217,6 +214,30 @@ export default function GeneratorPage() {
 			console.log("API usage incremented successfully", data)
 		} catch (error) {
 			console.error("Error incrementing API usage:", error)
+		}
+	}
+
+	async function fetchSubscriptionStatus(): Promise<boolean> {
+		try {
+			const res = await fetch(
+				`${process.env.NEXT_PUBLIC_APP_URL}/api/subscription`,
+				{
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+					},
+				}
+			)
+
+			if (!res.ok) {
+				throw new Error("Failed to fetch subscription status")
+			}
+
+			const { message } = await res.json()
+			return message
+		} catch (error) {
+			console.error("Error fetching subscription status:", error)
+			throw error
 		}
 	}
 
@@ -333,7 +354,7 @@ export default function GeneratorPage() {
 					isLoading && "hidden"
 				)}
 			>
-				<form onSubmit={handleLoadMoree}>
+				<form onSubmit={handleLoadMore}>
 					<Button
 						disabled={isLoading}
 						className={cn(
@@ -348,11 +369,6 @@ export default function GeneratorPage() {
 					</Button>
 				</form>
 			</div>
-
-			{/* Subscription Modal */}
-			{showSubscriptionModal && (
-				<div className="text-5xl font-black">Subscription Modal</div>
-			)}
 		</div>
 	)
 }

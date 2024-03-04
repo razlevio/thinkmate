@@ -5,13 +5,15 @@ import { usePathname } from "next/navigation"
 
 import { routes } from "@/lib/routes"
 import { cn } from "@/lib/utils"
-import { Logo } from "@/components/logo"
 import { FreeCounter } from "@/components/free-counter"
+import { Logo } from "@/components/logo"
+
 type SidebarProps = {
 	apiLimitCount: number
+	isPro: boolean
 }
 
-export function Sidebar({ apiLimitCount }: SidebarProps) {
+export function Sidebar({ apiLimitCount = 0, isPro = false }: SidebarProps) {
 	const pathname = usePathname()
 	return (
 		<div className="flex h-full flex-col space-y-4 bg-muted py-4">
@@ -48,7 +50,7 @@ export function Sidebar({ apiLimitCount }: SidebarProps) {
 					))}
 				</div>
 			</div>
-			<FreeCounter apiLimitCount={apiLimitCount} />
+			<FreeCounter apiLimitCount={apiLimitCount} isPro={isPro} />
 		</div>
 	)
 }

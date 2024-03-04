@@ -25,4 +25,4 @@ export const examplePrompts = [
 	"Ideas to make learning a new concept fun and effective",
 ]
 
-export const MAX_FREE_COUNTS = 5
+export const MAX_FREE_COUNTS = 10

@@ -12,7 +12,8 @@ Thinkmate is an innovative application designed to spark creativity and provide 
 - **Engaging User Interface**: Ideas are presented in individual components for easy browsing and interaction.
 - **User Engagement**: Like your favorite ideas to save them to your personal space for later reference.
 - **Detailed Insights**: Each idea comes with additional context and actionable sub-steps to help bring your ideas to life.
-
+- **Stripe monthly subscrtiption**
+- **Free tier with API limiting**
 ## Usage
 
 To generate ideas, simply:

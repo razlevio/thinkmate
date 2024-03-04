@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { Rocket } from "lucide-react"
 
 import { MAX_FREE_COUNTS } from "@/lib/constants"
+import { useProModal } from "@/hooks/use-pro-modal"
 
 import { Button } from "./ui/button"
 import { Card, CardContent } from "./ui/card"
@@ -11,9 +12,14 @@ import { Progress } from "./ui/progress"
 
 type FreeCounterProps = {
 	apiLimitCount: number
+	isPro: boolean
 }
 
-export function FreeCounter({ apiLimitCount }: FreeCounterProps) {
+export function FreeCounter({
+	apiLimitCount = 0,
+	isPro = false,
+}: FreeCounterProps) {
+	const proModal = useProModal()
 	const [mounted, setMounted] = useState(false)
 
 	useEffect(() => {
@@ -21,6 +27,10 @@ export function FreeCounter({ apiLimitCount }: FreeCounterProps) {
 	}, [])
 
 	if (!mounted) {
+		return null
+	}
+
+	if(isPro) {
 		return null
 	}
 
@@ -37,7 +47,11 @@ export function FreeCounter({ apiLimitCount }: FreeCounterProps) {
 							value={(apiLimitCount / MAX_FREE_COUNTS) * 100}
 						></Progress>
 					</div>
-					<Button className="w-full" variant={"premium"}>
+					<Button
+						onClick={proModal.onOpen}
+						className="w-full"
+						variant={"premium"}
+					>
 						Upgrade
 						<Rocket className="ml-2 size-4" />
 					</Button>

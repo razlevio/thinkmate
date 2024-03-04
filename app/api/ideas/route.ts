@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
 
 		const { messages } = await req.json()
 
-		console.log(messages)
+		// console.log(messages)
 
 		// Request the OpenAI API for the response based on the prompt
 		const response = await openai.chat.completions.create({

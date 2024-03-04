@@ -1,16 +1,21 @@
-
 import { UserButton } from "@clerk/nextjs"
+
+import { getApiLimitCount } from "@/lib/api-limit"
+import { checkSubscription } from "@/lib/subscription"
 import { MobileSidebar } from "@/components/mobile-sidebar"
 import { ThemeToggle } from "@/components/theme-toggle"
 
-export function Navbar() {
+export async function Navbar() {
+	const apiLimitCount = await getApiLimitCount()
+	const isPro = await checkSubscription()
+
 	return (
-		<div className="fixed inset-x-0 top-0 z-50 flex items-center bg-background p-4">
-		<MobileSidebar />
-      <div className="flex w-full items-center justify-end gap-1">
-        <UserButton afterSignOutUrl="/" />
-        <ThemeToggle />
-      </div>
+		<div className="fixed inset-x-0 top-0 flex items-center bg-background p-4">
+			<MobileSidebar isPro={isPro} apiLimitCount={apiLimitCount} />
+			<div className="flex w-full items-center justify-end gap-1">
+				<UserButton afterSignOutUrl="/" />
+				<ThemeToggle />
+			</div>
 		</div>
 	)
 }
