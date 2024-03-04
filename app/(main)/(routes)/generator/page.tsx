@@ -100,7 +100,10 @@ export default function GeneratorPage() {
 				setApiLimitStatus(allowed)
 				setApiLimitCount(count)
 			} catch (error) {
-				console.error("Error updating API limit status after submission:", error)
+				console.error(
+					"Error updating API limit status after submission:",
+					error
+				)
 			}
 		}
 	}
@@ -157,7 +160,8 @@ export default function GeneratorPage() {
 		}
 
 		setMessages([])
-		const randomPrompt = examplePrompts[Math.floor(Math.random() * examplePrompts.length)]
+		const randomPrompt =
+			examplePrompts[Math.floor(Math.random() * examplePrompts.length)]
 		setUserPrompt(randomPrompt)
 		setInput(randomPrompt)
 		setIsGenerateMoreButton(true)

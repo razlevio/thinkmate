@@ -6,6 +6,7 @@ import { Rocket } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
+import { Spinner } from "./ui/spinner"
 
 type SubscriptionButtonProps = {
 	isPro: boolean
@@ -35,6 +36,7 @@ export default function SubscriptionButton({ isPro }: SubscriptionButtonProps) {
 		>
 			{isPro ? "Manage Subscription" : "Upgrade to PRO"}
 			{!isPro && <Rocket className="ml-2 size-4" />}
+			{loading && <div className="ml-2"><Spinner size="sm" /></div>}
 		</Button>
 	)
 }
