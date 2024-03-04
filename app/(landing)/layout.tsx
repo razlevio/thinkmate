@@ -1,11 +1,16 @@
+import { LandingFooter } from "./_components/landing-footer"
+import { LandingNavbar } from "./_components/landing-navbar"
+
 export default function LandingLayout({
 	children,
 }: {
 	children: React.ReactNode
 }) {
 	return (
-		<main className="h-full">
-			<div className="mx-auto size-full max-w-screen-xl">{children}</div>
+		<main className="mx-auto flex h-full max-w-screen-xl flex-col justify-between">
+			<LandingNavbar />
+			{children}
+			<LandingFooter />
 		</main>
 	)
 }

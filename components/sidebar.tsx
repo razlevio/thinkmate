@@ -12,13 +12,14 @@ type SidebarProps = {
 	apiLimitCount: number
 	isPro: boolean
 }
-
 export function Sidebar({ apiLimitCount = 0, isPro = false }: SidebarProps) {
 	const pathname = usePathname()
 	return (
 		<div className="flex h-full flex-col space-y-4 bg-muted py-4">
 			<div className="flex-1 px-3 py-2">
-				<Logo />
+				<div className="mb-14 pl-3">
+					<Logo />
+				</div>
 				<div className="space-y-1">
 					{routes.map((route) => (
 						<Link

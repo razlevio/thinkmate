@@ -7,6 +7,8 @@ export default authMiddleware({
 		"/api/api-limit",
 		"/api/webhook",
 		"/api/subscription",
+		"/terms-of-service",
+		"/privacy-policy",
 	],
 })
 
