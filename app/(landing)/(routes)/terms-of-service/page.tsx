@@ -1,6 +1,6 @@
 export default function TermsOfServicePage() {
 	return (
-		<div className="prose mx-8 my-10 text-foreground md:mx-auto">
+		<div className="prose mx-8 my-10 pt-16 text-foreground md:mx-auto">
 			<h1 className="text-foreground">Terms of service</h1>
 			<h2 className="text-foreground">Liability</h2>
 			<p>

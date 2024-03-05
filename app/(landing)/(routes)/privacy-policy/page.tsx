@@ -1,6 +1,6 @@
 export default function PrivacyPolicyPage() {
 	return (
-		<div className="prose mx-8 my-10 text-foreground md:mx-auto">
+		<div className="prose mx-8 my-10 pt-16 text-foreground md:mx-auto">
 			<h1 className="text-foreground">Privacy Policy</h1>
 			<p>
 				Thinkmate ('we', 'us', or 'our') provides this Privacy Policy to inform

@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button"
 import { Heading } from "@/app/(main)/_components/heading"
 
 import { revalidate } from "../../_actions/revalidate"
-import { Idea } from "../generator/_components/idea"
+import { Idea } from "./_components/idea"
 
 export default function GeneratorPage() {
 	const generator = {

@@ -10,13 +10,15 @@ export const LandingNavbar = () => {
 	const { isSignedIn } = useAuth()
 
 	return (
-		<nav className="flex items-center justify-between p-4">
-			<Logo />
-			<Link href={isSignedIn ? "/dashboard" : "/sign-up"}>
-				<Button variant="outline" className="rounded-full">
-					Get Started
-				</Button>
-			</Link>
+		<nav className="fixed top-0 flex w-full max-w-screen-xl items-center justify-center bg-background p-4">
+			<div className="flex w-full items-center justify-between">
+				<Logo />
+				<Link href={isSignedIn ? "/dashboard" : "/sign-up"}>
+					<Button variant="outline" className="rounded-full">
+						Get Started
+					</Button>
+				</Link>
+			</div>
 		</nav>
 	)
 }

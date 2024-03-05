@@ -4,7 +4,7 @@ import { LandingNavbar } from "../_components/landing-navbar"
 
 export default function MarketingPage() {
 	return (
-		<div className="flex flex-col justify-between">
+		<div className="flex h-full items-center justify-center">
 			<LandingHero />
 		</div>
 	)
