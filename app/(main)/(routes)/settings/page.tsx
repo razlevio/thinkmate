@@ -5,7 +5,7 @@ import SubscriptionButton from "@/components/subscription-button"
 export default async function SettingsPage() {
 	const settings = {
 		title: "Settings",
-		description: "Manage your settings, subscription and preferences",
+		description: "Manage your settings and subscription",
 		icon: Settings,
 		iconColor: "text-primary",
 		bgColor: "bg-primary/10",
