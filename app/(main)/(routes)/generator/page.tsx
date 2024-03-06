@@ -25,6 +25,7 @@ export default function GeneratorPage() {
 		iconColor: "text-primary",
 		bgColor: "bg-primary/10",
 	}
+
 	const proModal = useProModal()
 	const { formRef, onKeyDown } = useEnterSubmit()
 	const [isFocused, setIsFocused] = useState(false)
@@ -36,6 +37,7 @@ export default function GeneratorPage() {
 	const [apiLimitStatus, setApiLimitStatus] = useState(false)
 	const [apiLimitCount, setApiLimitCount] = useState(0)
 	const [subscription, setSubscription] = useState(false)
+	const [isMounted, setIsMounted] = useState(false)
 
 	useEffect(() => {
 		fetchApiLimitStatus()
@@ -54,6 +56,7 @@ export default function GeneratorPage() {
 			.catch((error) => {
 				console.error("Failed to fetch subscription status:", error)
 			})
+			.finally(() => setIsMounted(true))
 	}, [])
 
 	const {
@@ -259,7 +262,7 @@ export default function GeneratorPage() {
 						<Textarea
 							tabIndex={0}
 							rows={1}
-							disabled={isLoading}
+							disabled={isLoading || !isMounted}
 							onKeyDown={onKeyDown}
 							value={userPrompt}
 							onChange={hInputChange}
@@ -287,7 +290,7 @@ export default function GeneratorPage() {
 								variant={"main"}
 								type="submit"
 								size="icon"
-								disabled={isLoading}
+								disabled={isLoading || !isMounted}
 							>
 								<CornerDownLeft />
 								<span className="sr-only">Generate Button</span>
@@ -307,7 +310,7 @@ export default function GeneratorPage() {
 			>
 				<Button
 					onClick={handleRandomGeneration}
-					disabled={isLoading}
+					disabled={isLoading || !isMounted}
 					className="bg-background-300/10 border-primary-500/20 relative mx-auto mt-4 rounded-full border px-4 py-2 text-center text-foreground backdrop-blur-sm hover:text-primary-foreground"
 				>
 					<span>Random</span>
@@ -357,7 +360,7 @@ export default function GeneratorPage() {
 			>
 				<form onSubmit={handleLoadMore}>
 					<Button
-						disabled={isLoading}
+						disabled={isLoading || !isMounted}
 						className={cn(
 							"bg-background-300/10 border-primary-500/20 relative mx-auto mt-4 rounded-full border px-4 py-2 text-center text-foreground backdrop-blur-sm hover:text-primary-foreground",
 							!isGenerateMoreButton && "hidden"
