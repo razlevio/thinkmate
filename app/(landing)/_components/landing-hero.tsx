@@ -14,7 +14,7 @@ export function LandingHero() {
 		<div className="space-y-5 py-36 text-center">
 			<div className="space-y-5 font-extrabold">
 				<h1 className="text-xl md:text-3xl">Instant Idea Generation</h1>
-				<div className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-2xl text-transparent md:text-4xl lg:text-5xl xl:text-6xl">
+				<div className="bg-gradient-to-r from-gray-400 to-gray-600 bg-clip-text text-2xl text-transparent md:text-4xl lg:text-5xl xl:text-6xl">
 					<TypewriterComponent
 						options={{
 							strings: examplePrompts,
@@ -32,7 +32,7 @@ export function LandingHero() {
 			<div>
 				<Link href={isSignedIn ? "/dashboard" : "/sign-up"}>
 					<Button
-						variant="premium"
+						variant="premium2"
 						className="rounded-full p-4 font-semibold md:p-6 md:text-lg"
 					>
 						Start Generating For Free

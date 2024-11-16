@@ -27,11 +27,6 @@ export function LandingFooter() {
 						</li>
 					</ul>
 				</div>
-				<hr className="my-6 border-gray-200 dark:border-gray-700 sm:mx-auto lg:my-8" />
-				<span className="block text-sm text-gray-500 dark:text-gray-400 sm:text-center">
-					© 2024 <span className="hover:underline">Thinkmate™</span>. All
-					Rights Reserved.
-				</span>
 			</div>
 		</footer>
 	)
