@@ -10,7 +10,8 @@
 	"rules": {
 		"tailwindcss/no-custom-classname": "off",
 		"tailwindcss/classnames-order": "error",
-		"react/no-unescaped-entities": "off"
+		"react/no-unescaped-entities": "off",
+		"tailwindcss/no-contradicting-classname": "off"
 	},
 	"settings": {
 		"tailwindcss": {

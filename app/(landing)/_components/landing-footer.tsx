@@ -7,7 +7,9 @@ export function LandingFooter() {
 		<footer>
 			<div className="mx-auto w-full max-w-screen-xl p-4">
 				<div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-					<Logo />
+					<div className="hidden sm:block">
+						<Logo />
+					</div>
 					<ul className="flex items-center text-sm font-medium text-gray-500 dark:text-gray-400 sm:mb-0">
 						<li>
 							<Link
